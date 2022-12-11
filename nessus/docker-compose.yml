@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  nessus:
+    container_name: nessus
+    image: tenableofficial/nessus
+    hostname: nessus.testing.io
+    environment:
+      USERNAME: ${NESSUS_USERNAME}
+      PASSWORD: ${NESSUS_PASSWORD:-}
+      ACTIVATION_CODE: ${ACTIVATION_CODE:-}
+      AUTO_UPDATE: all
+      #for a tenable.io managed scanner
+      #LINKING_KEY: ${IO_KEY:-}
+      #MANAGER_HOST: cloud.tenable.com
+      #MANAGER_PORT: 443
+      #PROXY_PORT: ${PROXY_PORT}
+      #PROXY_USER: ${PROXY_USER}
+      #PROXY_PASS: ${PROXY_PASS:-}
+    command: sh -c 'sleep 5m && while true; do dnf update -y &&
+             echo -ne "365\n365\nXX\nXX\nXXXX\ntestingOrg\nnessus.testing.io\ny" | /opt/nessus/sbin/nessuscli mkcert; done'
+    networks:
+      - tenable
+    ports:
+      - 8834:8834
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - nessus_data:/opt/nessus/var/nessus:z
+    restart: unless-stopped
+    
+networks:
+  tenable:
+    name: tenable
+    driver: bridge
+
+volumes:
+  nessus_data:
