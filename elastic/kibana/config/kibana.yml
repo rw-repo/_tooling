@@ -1,0 +1,20 @@
+---
+## Default Kibana configuration from Kibana base image.
+## https://github.com/elastic/kibana/blob/master/src/dev/build/tasks/os_packages/docker_generator/templates/kibana_yml.template.ts
+#
+server.name: kibana
+server.host: 0.0.0.0
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+monitoring.ui.container.elasticsearch.enabled: true
+
+## X-Pack security credentials
+#
+#generate keys and place in this file
+#podman-compose exec kibana bin/kibana-encryption-keys generate -f
+elasticsearch.username: kibana_system
+elasticsearch.password: ${KIBANA_SYSTEM_PASSWORD}
+#-example:
+#xpack.encryptedSavedObjects.encryptionKey: 17faaeca53dd9f5bc4dd34084334f8e6
+#xpack.reporting.encryptionKey: 0e1216987576629f6f8b9194c0e5f79d
+#xpack.security.encryptionKey: 4a4bf1b2a75ff6e6ce96f50cc818b5db
+#podman-compose down kibana && podman-compose up kibana -d
