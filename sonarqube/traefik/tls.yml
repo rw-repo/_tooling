@@ -1,0 +1,42 @@
+tls:
+  certificates:
+    - certFile: /etc/certs/sonarqube.domainname.certificate
+      keyFile: /etc/certs/sonarqube.domainname.key
+      stores:
+        - default
+      service: sonar
+    - certFile: /etc/certs/jenkins.domainname.certificate
+      keyFile: /etc/certs/jenkins.domainname.key
+      stores:
+        - default
+      service: jenkins
+    - certFile: /etc/certs/gitlab.domainname.certificate
+      keyFile: /etc/certs/gitlab.domainname.key
+      stores:
+        - default
+      service: gitlab
+  options:
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_AES_128_GCM_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+#    tlsv13force:
+#      minVersion: VersionTLS13
+#      curvePreferences:
+#        - CurveP521
+#        - CurveP384
+#      sniStrict: true
+  stores:
+    default:
+      defaultCertificate:
+        - certFile: /etc/certs/sonarqube.domainname.certificate
+          keyFile: /etc/certs/sonarqube.domainname.key
+        - certFile: /etc/certs/jenkins.domainname.certificate
+          keyFile: /etc/certs/jenkins.domainname.key
+        - certFile: /etc/certs/gitlab.domainname.certificate
+          keyFile: /etc/certs/gitlab.domainname.key

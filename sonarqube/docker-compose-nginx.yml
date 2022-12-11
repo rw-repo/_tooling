@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  reverse_proxy:
+    container_name: reverse_proxy
+    image: docker.io/bitnami/nginx
+    hostname: nginx.testing.io
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - sonarnet
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./nginx-access-logs/:/var/log/nginx/:z
+      #generate a cert and key and place in nginx directory
+      - ./nginx/sonarqube.crt:/etc/ssl/certs/sonarqube.crt:ro                                                                                                                                             .crt
+      - ./nginx/sonarqube.key:/etc/ssl/private/sonarqube.key:ro
+      - ./nginx/dhparam.pem:/etc/nginx/dhparam.pem:ro
+      - ./nginx/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf:ro
+      - ./nginx/sonarqube.io:/etc/nginx/sites-available/sonarqube.io:ro
+    command: sh -c 'sleep 1m && while true; do 
+             ln -s /etc/nginx/sites-available/sonarqube.io /etc/nginx/sites-enabled/sonarqube.io 
+             && nginx -s reload; done'
+    restart: on-failure

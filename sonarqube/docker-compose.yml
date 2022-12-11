@@ -1,0 +1,42 @@
+version: '3'
+
+volumes:
+  sonarqube-data:
+  sonarqube-extensions:
+  sonarqube-logs:
+  sonarqube-temp:
+  
+networks:
+  sonarnet:
+    name: sonarnet
+    driver: bridge
+    
+services:
+  sonarqube:
+    image: docker.io/sonarqube:latest
+    container_name: sonarqube
+    hostname: sonarqube.io
+    ports:
+      - 9000:9000
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
+    volumes:  
+      - /etc/localtime:/etc/localtime:ro
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-extensions:/opt/sonarqube/extensions
+      - sonarqube-logs:/opt/sonarqube/logs
+      - sonarqube-temp:/opt/sonarqube/temp
+    healthcheck:
+      test: ["CMD", "wget", "http://localhost:9000/","--spider"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ulimits:
+      nproc: 8192
+      nofile:
+        soft: 65536
+        hard: 131072
+    networks:
+      sonarnet:
+      

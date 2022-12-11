@@ -1,0 +1,36 @@
+version: '3'
+
+volumes:
+  sonarqube_db:
+  postgresql_data:
+  
+networks:
+  sonarnet:
+  
+services:
+  postgres:
+    image: docker.io/bitnami/postgresql:latest
+    container_name: postgres-sonar
+    hostname: postgres-sonar.testing.io
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - sonarqube_db:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -h 127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    networks:
+      - sonarnet
+    #depends_on:
+    #  - traefik
+ 

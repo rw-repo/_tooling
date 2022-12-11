@@ -1,0 +1,44 @@
+version: '3'
+
+volumes:
+  sonarqube-data:
+  sonarqube-extensions:
+  sonarqube-logs:
+  sonarqube-temp:
+  
+services:
+  sonarqube:
+    image: docker.io/sonarqube:latest
+    container_name: sonarqube
+    hostname: sonarqube.io
+    ports:
+      - 9000:9000
+    environment:
+      SONAR_JDBC_URL: "jdbc:postgresql://${JDBC_IP}/sonarqube"
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: ${JPOSTGRESC_PASS}
+    volumes:  
+      - /etc/localtime:/etc/localtime:ro
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-extensions:/opt/sonarqube/extensions
+      - sonarqube-logs:/opt/sonarqube/logs
+      - sonarqube-temp:/opt/sonarqube/temp
+    healthcheck:
+      test: ["CMD", "wget", "http://localhost:9000/","--spider"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ulimits:
+      nproc: 8192
+      nofile:
+        soft: 65536
+        hard: 131072
+    depends_on:
+      postgres:
+        condition: service_healthy
+      #- traefik
+    networks:
+      - sonarnet
+    #labels:
+    #  - "traefik.enable=true"

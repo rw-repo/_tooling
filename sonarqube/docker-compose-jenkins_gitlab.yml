@@ -1,0 +1,68 @@
+version: '3'
+ 
+services:
+
+  jenkins:
+    image: jenkinsci/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins.domainname.io
+    restart: unless-stopped
+    command:
+      - --httpsKeyStore=/var/jenkins_home/jenkins_keystore.jks 
+      - --httpsKeyStorePassword=${JENKINS_KEY_PASS}
+    ports:
+      - 8443:8443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./jenkins_configs:/var/jenkins_home:z
+      # keytool -genkey -keyalg RSA -alias selfsigned -keystore ./jenkins_ssl/jenkins_keystore.jks -storepass <ENTER PASS> -keysize 2048
+      - ./jenkins_ssl/jenkins_keystore.jks:/var/jenkins_home/jenkins_keystore.jks:ro
+    environment:
+      - "JENKINS_OPTS=--prefix=/jenkins"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sonarqube:
+        condition: service_healthy
+      #- traefik
+    networks:
+      - sonarnet
+    labels:
+      - "traefik.enable=true"
+ 
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: gitlab.domainname.io
+    restart: unless-stopped
+    environment:
+      GITLAB_SECRETS_DB_KEY_BASE: ${GITLAB_DB_KEY}
+      GITLAB_HOST: ${GITLAB_IP}
+      GITLAB_PORT: 50443
+      GITLAB_SSH_PORT: 10022
+    ports:
+      - 50443:443
+      - 10022:22
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./gitlab_config:/etc/gitlab:z
+      - ./gitlab_logs:/var/log/gitlab:z
+      - ./gitlab_data:/var/opt/gitlab:z
+      # sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./gitlab_ssl/gitlab.key -out ./gitlab_ssl/gitlab.crt
+      # sudo openssl req -x509 -inform DER -outform PEM -in ./gitlab_ssl/gitlab.crt -out ./gitlab_ssl/gitlab.crt.pem
+      - ./gitlab_ssl/gitlab.crt.pem:/etc/gitlab/ssl/gitlab.crt.pem:ro
+      - ./gitlab_ssl/gitlab.key:/etc/gitlab/ssl/gitlab.key:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sonarqube:
+        condition: service_healthy
+      - jenkins
+      #- traefik
+    networks:
+      - sonarnet
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  sonarnet:
