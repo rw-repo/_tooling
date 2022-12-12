@@ -118,13 +118,6 @@ cd arachni
 #build arachni
 tee ./Dockerfile<<EOF
 FROM docker.io/debian:stable
-#ENV VERSION 1.6.1.3
-#ENV WEB_VERSION 0.6.1.1
-#ENV POSTGRES_HOST arachni.testing.io
-#ENV POSTGRES_DATABASE arachni-db
-#ENV POSTGRES_USERNAME arachni
-#ENV POSTGRES_PASSWORD temporary
-#ENV PATH /opt/arachni/bin:$PATH
 
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
@@ -132,13 +125,6 @@ RUN apt-get update -y && apt-get install build-essential \
 RUN wget -qO- https://github.com/Arachni/arachni/releases/download/v1.6.1.3/arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz \
     | tar zx && mv /arachni-1.6.1.3-0.6.1.1 /opt/arachni
 
-#setup DB
-#ADD arachni-db.yml /opt/arachni/system/arachni-ui-web/config/database.yml
-#setup startup script
-#ADD arachni-startup.sh /arachni-startup.sh
-#RUN chmod u+x /arachni-startup.sh
-#CMD ["/arachni-startup.sh"]
-#EXPOSE 9292
 RUN groupadd -r arachni && useradd -r -g arachni arachni
 RUN chown -R arachni:arachni /opt/arachni
 USER arachni
@@ -201,7 +187,6 @@ FROM alpine:3.17.0
 RUN apk add --no-cache bind-tools ca-certificates chromium wget unzip
 
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
-#ENTRYPOINT ["nuclei"]
 EOF
 
 podman build -t nuclei .
