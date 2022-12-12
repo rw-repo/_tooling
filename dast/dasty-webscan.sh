@@ -2,27 +2,8 @@
 
 <<comment
 ------------------------------------------------------------------
-DAST Scans with:
 
-info:
-Burpsuite - https://portswigger.net/burp
-OWASP Zed Attack Proxy - https://www.zaproxy.org/
-Arachni - https://www.arachni-scanner.com/
-Nuclei - https://nuclei.projectdiscovery.io/ 
-
-Author: RW
-
-DISCLAIMER: Only use against websites authorized to be scanned.
-
-testhtml5.vulnweb.com
-
-Warning: This is an HTML5 application that is vulnerable by design. 
-This is not a real collection of tweets. This application was 
-created so that you can test your Acunetix, other tools, or your 
-manual penetration testing skills. The application code is prone to 
-attacks such as Cross-site Scripting (XSS) and XML External Entity (XXE). 
-Links presented on this site have no affiliation to the site and are here 
-only as samples.                            
+Author: RW                         
 
 If using debian/ubuntu;
 
@@ -39,13 +20,13 @@ target and outputs results in $RESULT_DIR
 requirements:
 linux64
 internet connection
-outbound connection to target
 
 ...editing
 Burpsuite - editing
 Zap - done
 Arachni - done
 Nuclei - done
+
 ------------------------------------------------------------------
 comment
 
