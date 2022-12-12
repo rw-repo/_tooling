@@ -10,7 +10,8 @@ COPY . /
 RUN set -eux; \
 	mkdir /state; \
 	chown elasticsearch /state; \
-	chmod +x /entrypoint.sh
+	chmod +x /entrypoint.sh && \
+	apt-get update -y
 
 USER elasticsearch:root
 
