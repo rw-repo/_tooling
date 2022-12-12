@@ -2,7 +2,8 @@ ARG ELASTIC_VERSION
 
 # https://www.docker.elastic.co/
 FROM docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
-RUN apt-get update -y
+USER root
+RUN apt-get update -y && apt-get autoremove -y
 # Add your logstash plugins setup here
 # Example: RUN logstash-plugin install logstash-filter-json
 RUN logstash-plugin install logstash-filter-json
