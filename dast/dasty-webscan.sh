@@ -56,7 +56,7 @@ THREADS=35
 BURP_HOST=#burp.domainname.io
 BURP_PORT=#8080
 BURP_APIKEY=#someapikey
-ZAP_API_ALLOW_IP=#"127.0.0.1"
+ZAP_API_ALLOW_IP="127.0.0.1"
 RESULT_DIR=./
 
 mkdir -p ./{owasp-zap,arachni,nuclei}
@@ -111,26 +111,15 @@ podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap 
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
 
-if [ "$MODE" = http ]; then
+podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/zap-report-${MODE}-${TARGET}-${DATE}.html
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://$TARGET -r /zap/zap-report-$TARGET-http-$DATE.html
-#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-http-$DATE.html
+#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${MODE}-${APP_NAME[$i]}-${DATE}.html
 #done
-echo "---------------------------------------------zap http scan; done."
+echo "---------------------------------------------zap scan; done."
 
-elif [ "$MODE" = https ]; then
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://$TARGET -r /zap/zap-report-$TARGET-https-$DATE.html
-#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-https-$DATE.html
-#done
-fi
-echo "---------------------------------------------zap https scan; done."
-
+podman cp owasp-zap:/zap/zap-report-${MODE}-${TARGET}-${DATE}.html $RESULT_DIR/owasp-zap
 #for ((i=0; i<${#APP_NAME[@]}; i++)); do
-podman cp owasp-zap:/zap/zap-report-$TARGET-http-$DATE.html $RESULT_DIR/owasp-zap
-podman cp owasp-zap:/zap/zap-report-$TARGET-https-$DATE.html $RESULT_DIR/owasp-zap
-#podman cp owasp-zap:/zap/zap-report-${APP_NAME[$i]}-http.html $RESULT_DIR/dast
-#podman cp owasp-zap:/zap/zap-report-${APP_NAME[$i]}-https.html $RESULT_DIR/dast
+#podman cp owasp-zap:/zap/zap-report-${MODE}-${APP_NAME[$i]}-$DATE.html $RESULT_DIR/owasp-zap
 #done
 
 # ----------------------------------------------------------------------------------------------------- arachni;
@@ -221,20 +210,11 @@ podman exec nuclei nuclei --update
 podman exec nuclei nuclei --ut
 podman exec nuclei mkdir -p /results
 
-if [ "$MODE" = http ]; then
+podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://$TARGET -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
-#podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}.log
+#podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}-${DATE}.log
 #done
-echo "---------------------------------------------nuclei http scans; done."
-
-elif [ "$MODE" = https ]; then
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://$TARGET -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
-#podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}.log
-#done
-fi
-echo "---------------------------------------------nuclei https scans; done."
+echo "---------------------------------------------nuclei scans; done."
 
 podman cp nuclei:/results $RESULT_DIR/nuclei
 cd ..
