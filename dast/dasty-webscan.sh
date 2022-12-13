@@ -34,6 +34,7 @@ dnf update -y \
 && dnf install podman podman-compose -y #comment out if using docker instead
 
 DATE=$(date +"%Y%m%d%H%M")
+MODE="http" #or https
 TARGET="testhtml5.vulnweb.com"
 #declare -a TARGETS=(
 #"google-gruyere.appspot.com"
@@ -58,10 +59,16 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 #podman build -t burpsuite -f ./burp/Dockerfile
 #podman run --rm -it --name burpsuite -p 8080:8080 -p 1337:1337 -d burpsuite
 #podman exec burpsuite mkdir -p $RESULT_DIR/dast
+
+#if [ "$MODE" = http ]; then
 #podman exec burpsuite curl -s -X POST "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan" \
 #-d "{\"scope\":{\"include\":[{\"rule\":\"http://$TARGET:80\"}],\"type\":\"SimpleScope\"},\"urls\":[\"http://$TARGET:$WEBPORT\"]}"
+
+#elif [ "$MODE" = https ]; then
 #podman exec burpsuite curl -s -X POST "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan" \
 #-d "{\"scope\":{\"include\":[{\"rule\":\"https://$TARGET:443\"}],\"type\":\"SimpleScope\"},\"urls\":[\"https://$TARGET:$WEBPORT\"]}"
+#fi
+
 #for a in {1..30}; 
 #do 
 #	podman exec burpsuite echo -n "[-] SCAN #$a: "
@@ -77,7 +84,8 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 #	podman exec burpsuite echo "[i] STATUS: $BURP_STATUS_FULL"
 #	podman exec burpsuite sleep 15
 #	done
-#done 
+#done
+
 #for a in {1..30}; 
 #do
 #	podman exec burpsuite curl -s "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a" \
@@ -89,22 +97,28 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 
 # ---------------------------------------------------- zed attack proxy;
 #podman build -t owasp-zap -f ./zap/Dockerfile
-#build
 genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
 key=$(genkey)
-podman run -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d docker.io/owasp/zap2docker-stable \
+#build
+podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d docker.io/owasp/zap2docker-stable \
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
+
+if [ "$MODE" = http ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec owasp-zap zap-full-scan.py -t http://$TARGET -r /zap/zap-report-$TARGET-http-$DATE.html
 #podman exec owasp-zap zap-full-scan.py -t http://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-http-$DATE.html
 #done
+
+elif [ "$MODE" = https ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec owasp-zap zap-full-scan.py -t https://$TARGET -r /zap/zap-report-$TARGET-https-$DATE.html
 #podman exec owasp-zap zap-full-scan.py -t https://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-https-$DATE.html
 #done
+fi
+
 #for ((i=0; i<${#APP_NAME[@]}; i++)); do
 podman cp owasp-zap:/zap/zap-report-$TARGET-http-$DATE.html $RESULT_DIR/owasp-zap
 podman cp owasp-zap:/zap/zap-report-$TARGET-https-$DATE.html $RESULT_DIR/owasp-zap
@@ -132,47 +146,53 @@ CMD ["/bin/bash"]
 EOF
 
 podman build -t arachni .
-podman run -it --name arachni -d arachni
+podman run --rm -it --name arachni -d arachni
 echo "---------------------------------------------arachni build; done."
 
+if [ "$MODE" = http ]; then
 PORT=80
-podman exec arachni mkdir -p /opt/arachni/results/arachni_${TARGET}_${PORT}/
+podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan/
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
---report-save-path=/opt/arachni/results/arachni_${TARGET}_${PORT}/arachni_${TARGET}_${PORT}.afr \
+--report-save-path=/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGET}_${PORT}.afr \
 --output-only-positives http://$TARGET
 #podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
-#--report-save-path=/opt/arachni/results/arachni_${APP_NAME[$i]}_${PORT}/arachni_${TARGETS[i]}_${PORT}.afr \
+#--report-save-path=/opt/arachni/results/arachni_${MODE}_scan/arachni_${APP_NAME[i]}_${PORT}.afr \
 #--output-only-positives http://${TARGETS[$i]}
 #done
-#for ((i=0; i<${#APP_NAME[@]}; i++)); do
+
+#for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni_reporter \
-/opt/arachni/results/arachni_${TARGET}_${PORT}/arachni_${TARGET}_${PORT}.afr \
---report=html:outfile=/opt/arachni/results/arachni_${TARGET}_${PORT}/arachni_${TARGET}_${PORT}_${DATE}.html.zip
+/opt/arachni/results/arachni_${MODE}_scan/arachni_${APP_NAME}_${PORT}.afr \
+--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGET}_${PORT}_${DATE}.html.zip
 #podman exec arachni /opt/arachni/bin/arachni_reporter \
-#/opt/arachni/results/arachni_${APP_NAME[$i]}_${PORT}/arachni_${APP_NAME[$i]}_${PORT}.afr \
-#--report=html:outfile=/opt/arachni/results/arachni_${APP_NAME[$i]}_${PORT}/arachni_${APP_NAME[$i]}_${PORT}.html.zip
+#/opt/arachni/results/arachni_${MODE}_scan/arachni_${APP_NAME[$i]}_${PORT}.afr \
+#--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGETS[$i]}_${PORT}.html.zip
 #done
 echo "---------------------------------------------arachni 80 scans; done."
 
+elif [ "$MODE" = https ]; then
 PORT=443
-podman exec arachni mkdir -p /opt/arachni/results/arachni_${TARGET}_${PORT}/
+podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan/
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
---report-save-path=/opt/arachni/results/arachni_${TARGET}_${PORT}/arachni_${TARGET}_${PORT}.afr --output-only-positives \
+--report-save-path=/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGET}_${PORT}.afr --output-only-positives \
 --scope-https-only https://$TARGET
 #podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
-#--report-save-path=/opt/arachni/results/arachni_${APP_NAME[$i]}_${PORT}/arachni_${TARGETS[i]}_${PORT}.afr \
+#--report-save-path=/opt/arachni/results/arachni_${MODE}_scan/arachni_${APP_NAME[i]}_${PORT}.afr \
 #--output-only-positives --scope-https-only https://${TARGETS[$i]}
 #done
-#for ((i=0; i<${#APP_NAME[@]}; i++)); do
+fi
+
+#for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni_reporter \
-/opt/arachni/results/arachni_${TARGET}_${PORT}/arachni_${TARGET}_${PORT}.afr \
---report=html:outfile=/opt/arachni/results/arachni_${TARGET}_${PORT}/arachni_${TARGET}_${PORT}_${DATE}.html.zip
+/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGET}_${PORT}.afr \
+--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGET}_${PORT}_${DATE}.html.zip
 #podman exec arachni /opt/arachni/bin/arachni_reporter \
-#/opt/arachni/results/arachni_${APP_NAME[$i]}_${PORT}_${DATE}/arachni_${APP_NAME[$i]}_${PORT}.afr \
-#--report=html:outfile=/opt/arachni/results/arachni_${APP_NAME[$i]}_${PORT}/arachni_${APP_NAME[$i]}_${PORT}.html.zip
+#/opt/arachni/results/arachni_${MODE}_scan/arachni_${APP_NAME[$i]}_${PORT}.afr \
+#--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan/arachni_${TARGETS[$i]}_${PORT}.html.zip
 #done
+
 podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 echo "---------------------------------------------arachni 443 scans; done."
 
@@ -190,7 +210,7 @@ COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
 EOF
 
 podman build -t nuclei .
-podman run -it --name nuclei -d nuclei
+podman run --rm -it --name nuclei -d nuclei
 echo "---------------------------------------------nuclei build; done."
 
 #update and run nuclei scans, modify here to use templates found in:
@@ -200,14 +220,18 @@ echo "---------------------------------------------nuclei build; done."
 podman exec nuclei nuclei --update
 podman exec nuclei nuclei --ut
 podman exec nuclei mkdir -p /results
+
+if [ "$MODE" = http ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec nuclei nuclei -c $THREADS -ni -u http://$TARGET -o /results/nuclei-http-${TARGET}-port80-${DATE}.log
 #podman exec nuclei nuclei -c $THREADS -ni -u http://${TARGETS[$i]} -o /results/nuclei-http-${APP_NAME[$i]}-port80.log
 #done
+elif [ "$MODE" = https ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec nuclei nuclei -c $THREADS -ni -u https://$TARGET -o /results/nuclei-https-${TARGET}-port443-${DATE}.log
 #podman exec nuclei nuclei -c $THREADS -ni -u https://${TARGETS[$i]} -o /results/nuclei-https-${APP_NAME[$i]}-port443.log
 #done
+fi
 podman cp nuclei:/results $RESULT_DIR/nuclei
 cd ..
 echo "---------------------------------------------nuclei scans; done."
