@@ -31,26 +31,31 @@ Nuclei - done
 comment
 
 dnf update -y \
-&& dnf install podman podman-compose -y #comment out if using docker instead
+&& dnf install podman podman-compose -y
 
-DATE=$(date +"%Y%m%d%H")
+#curl -o /usr/local/bin/podman-compose \
+#https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
+#chmod +x /usr/local/bin/podman-compose
+#alias podman-compose=/usr/local/bin/podman-compose
+
+DATE=$(date +"%Y%m%d")
 MODE="http" #or https
 TARGET="testhtml5.vulnweb.com"
 #declare -a TARGETS=(
 #"google-gruyere.appspot.com"
-#"www.itsecgames.com"
+#"testhtml5.vulnweb.com"
 #"HackThisSite.org"
 #"www.root-me.org")
 #declare -a APP_NAME=(
 #"google"
-#"itsecgames"
 #"hackthissite"
+#"testhtml5"
 #"rootme")
 THREADS=35
 BURP_HOST=#burp.domainname.io
 BURP_PORT=#8080
 BURP_APIKEY=#someapikey
-ZAP_API_ALLOW_IP="127.0.0.1"
+ZAP_API_ALLOW_IP=#"127.0.0.1"
 RESULT_DIR=./
 
 mkdir -p ./{owasp-zap,arachni,nuclei}
@@ -97,14 +102,15 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
 #podman build -t owasp-zap -f ./zap/Dockerfile
-genkey() {
-    cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
-}
-key=$(genkey)
-#build
-podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d docker.io/owasp/zap2docker-stable \
-zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
--config api.addrs.addr.regex=true -config api.key=$key
+#genkey() {
+#    cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
+#}
+#key=$(genkey)
+#podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d localhost/owasp-zap \
+#zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
+#-config api.addrs.addr.regex=true -config api.key=$key
+
+podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -it --name owasp-zap -d docker.io/owasp/zap2docker-stable
 
 if [ "$MODE" = http ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
