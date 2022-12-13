@@ -41,6 +41,7 @@ dnf update -y \
 DATE=$(date +"%Y%m%d")
 MODE="http" #or https
 TARGET="testhtml5.vulnweb.com"
+WEBPORT=#"8080"
 #declare -a TARGETS=(
 #"google-gruyere.appspot.com"
 #"testhtml5.vulnweb.com"
@@ -102,27 +103,25 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
 #podman build -t owasp-zap -f ./zap/Dockerfile
-#genkey() {
-#    cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
-#}
-#key=$(genkey)
-#podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d localhost/owasp-zap \
-#zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
-#-config api.addrs.addr.regex=true -config api.key=$key
-
-podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -it --name owasp-zap -d docker.io/owasp/zap2docker-stable
+genkey() {
+    cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
+}
+key=$(genkey)
+podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d localhost/owasp-zap \
+zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
+-config api.addrs.addr.regex=true -config api.key=$key
 
 if [ "$MODE" = http ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec owasp-zap zap-full-scan.py -t ${MODE}://$TARGET -r /zap/zap-report-$TARGET-http-$DATE.html
-#podman exec owasp-zap zap-full-scan.py -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-http-$DATE.html
+podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://$TARGET -r /zap/zap-report-$TARGET-http-$DATE.html
+#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-http-$DATE.html
 #done
 echo "---------------------------------------------zap http scan; done."
 
 elif [ "$MODE" = https ]; then
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec owasp-zap zap-full-scan.py -t ${MODE}://$TARGET -r /zap/zap-report-$TARGET-https-$DATE.html
-#podman exec owasp-zap zap-full-scan.py -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-https-$DATE.html
+podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://$TARGET -r /zap/zap-report-$TARGET-https-$DATE.html
+#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${APP_NAME[$i]}-https-$DATE.html
 #done
 fi
 echo "---------------------------------------------zap https scan; done."
