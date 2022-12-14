@@ -111,13 +111,14 @@ podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap 
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
 
-podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/zap-report-${MODE}-${TARGET}-${DATE}.html
+podman exec owasp-zap mkdir -p /zap/results
+podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/results/zap-report-${MODE}-${TARGET}-${DATE}.html
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
-#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/zap-report-${MODE}-${APP_NAME[$i]}-${DATE}.html
+#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/results/zap-report-${MODE}-${APP_NAME[$i]}-${DATE}.html
 #done
 echo "---------------------------------------------zap scan; done."
 
-podman cp owasp-zap:/zap/ $RESULT_DIR/owasp-zap
+podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 
 # ----------------------------------------------------------------------------------------------------- arachni;
 cd arachni
