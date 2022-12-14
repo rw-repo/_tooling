@@ -1,15 +1,15 @@
 resource "aws_lb" "alb" {
   name               = "nessus-load-balancer"
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.nessus-alb-sg.id]
-  subnets            = [aws_subnet.cyber-security-nessus-subnet.id, aws_subnet.cyber-security-nessus-subnet-b.id]
+  security_groups    = [aws_security_group._____________.id]
+  subnets            = [aws_subnet._____________.id, aws_subnet._____________.id]
 }
 
 resource "aws_lb_target_group" "nessus_web" {
   name     = "nessus-web"
   port     = 8834
   protocol = "HTTPS"
-  vpc_id   = aws_vpc.cyber-security-nessus.id
+  vpc_id   = aws_vpc._____________.id
   health_check {
     protocol = "HTTPS"
     path     = "/"
