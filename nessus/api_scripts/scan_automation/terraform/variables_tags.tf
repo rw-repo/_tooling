@@ -7,7 +7,7 @@ variable "Service" {
 variable "SvcOwner" {
   description = "Service Owner"
   type        = string
-  default     = "cyber security"
+  default     = "The Cybers"
 }
 
 variable "Environment" {
