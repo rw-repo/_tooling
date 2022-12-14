@@ -4,12 +4,12 @@ variable "lambda_zip_location" {
 
 variable "runtime" {
   description = "runtime for lambda"
-  default     = "python3.7"
+  default     = "python3.10"
 }
 
 variable "region" {
   type    = string
-  default = "eu-west-2"
+  default = "us-west-2"
 }
 
 variable "dependabot_lambda_memory" {
@@ -21,7 +21,7 @@ variable "dependabot_lambda_timeout" {
 }
 
 variable "fqdn" {
-  default = "nessus.gds-cyber-security.digital"
+  default = "myfq.domainname.io"
 }
 
 output "fqdn" {
