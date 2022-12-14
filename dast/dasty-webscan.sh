@@ -64,7 +64,7 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 # ----------------------------------------------------------------------------------------------------- burpsuite;
 #podman build -t burpsuite -f ./burp/Dockerfile
 #podman run --rm -it --name burpsuite -p 8080:8080 -p 1337:1337 -d burpsuite
-#podman exec burpsuite mkdir -p $RESULT_DIR/dast
+#podman exec burpsuite mkdir -p $RESULT_DIR/burp
 
 #if [ "$MODE" = http ]; then
 #podman exec burpsuite curl -s -X POST "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan" \
@@ -98,7 +98,7 @@ mkdir -p ./{owasp-zap,arachni,nuclei}
 #	| jq '.issue_events[].issue | "[" + .severity + "] " + .name + " - " + .origin + .path' | sort -u | sed 's/\"//g' \
 #	| tee $RESULT_DIR/web/burpsuite-$TARGET-$a.log
 #done
-#podman cp burpsuite:$RESULT_DIR/dast $RESULT_DIR/dast
+#podman cp burpsuite:$RESULT_DIR/burp $RESULT_DIR/burp
 #echo "---------------------------------------------burp scan; done."
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
@@ -117,10 +117,7 @@ podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/zap-
 #done
 echo "---------------------------------------------zap scan; done."
 
-podman cp owasp-zap:/zap/zap-report-${MODE}-${TARGET}-${DATE}.html $RESULT_DIR/owasp-zap
-#for ((i=0; i<${#APP_NAME[@]}; i++)); do
-#podman cp owasp-zap:/zap/zap-report-${MODE}-${APP_NAME[$i]}-$DATE.html $RESULT_DIR/owasp-zap
-#done
+podman cp owasp-zap:/zap/ $RESULT_DIR/owasp-zap
 
 # ----------------------------------------------------------------------------------------------------- arachni;
 cd arachni
