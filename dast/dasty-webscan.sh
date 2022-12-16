@@ -107,7 +107,8 @@ genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
 key=$(genkey)
-podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap -d docker.io/owasp/zap2docker-live \
+podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap \
+-d docker.io/owasp/zap2docker-stable@sha256:aabcb321ec17686a93403a6958541d8646c453fe9437ea43ceafc177c0308611 \
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
 
@@ -124,7 +125,7 @@ podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 cd arachni
 #build arachni
 tee ./Dockerfile<<EOF
-FROM docker.io/debian:stable
+FROM docker.io/debian:stable@sha256:1f51b4ada92150468a245a7aca50710bff8b07b774e164d9136a8e00cc74a57a
 
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
