@@ -209,6 +209,8 @@ podman exec nuclei nuclei --update
 podman exec nuclei nuclei --ut
 podman exec nuclei mkdir -p /results
 
+echo "---------------------------------------------nuclei full scan init; warn: this could take some time..."
+sleep 5s
 podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 #podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}-${DATE}.log
