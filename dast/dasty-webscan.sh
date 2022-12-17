@@ -181,12 +181,12 @@ podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 # ----------------------------------------------------------------------------------------------------- nuclei;
 cd ../nuclei
 tee ./Dockerfile<<EOF
-FROM docker.io/golang:1.19.3-alpine as build-env
+FROM docker.io/golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f as build-env
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
 FROM alpine:3.17.0
-RUN apk add --no-cache bind-tools ca-certificates chromium wget unzip
+RUN apk add --no-cache bind-tools ca-certificates chromium
 
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
 EOF
