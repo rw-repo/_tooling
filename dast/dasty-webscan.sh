@@ -171,7 +171,7 @@ echo "---------------------------------------------arachni https scans; done."
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni_reporter \
 /opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
---report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan/arachni_${MODE}_${TARGET}_${DATE}.html.zip
+--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}_${DATE}.html.zip
 #podman exec arachni /opt/arachni/bin/arachni_reporter \
 #/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[$i]}.afr \
 #--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGETS[$i]}.html.zip
