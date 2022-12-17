@@ -185,7 +185,7 @@ FROM docker.io/golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd34
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
-FROM alpine:3.17.0
+FROM alpine:3.17.0@sha256:c0d488a800e4127c334ad20d61d7bc21b4097540327217dfab52262adc02380c
 RUN apk add --no-cache bind-tools ca-certificates chromium
 
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
