@@ -145,10 +145,10 @@ echo "---------------------------------------------arachni build; done."
 
 if [ "$MODE" = http ]; then
 podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
 --report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --output-only-positives ${MODE}://$TARGET
+#for ((i=0; i<${#TARGETS[@]}; i++)); do
 #podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
 #--report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[i]}.afr \
 #--output-only-positives ${MODE}://${TARGETS[$i]}
@@ -157,10 +157,10 @@ echo "---------------------------------------------arachni http scans; done."
 
 elif [ "$MODE" = https ]; then
 podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
 --report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --output-only-positives --scope-https-only ${MODE}://$TARGET
+#for ((i=0; i<${#TARGETS[@]}; i++)); do
 #podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
 #--report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[i]}.afr \
 #--output-only-positives --scope-https-only ${MODE}://${TARGETS[$i]}
@@ -168,10 +168,10 @@ podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-su
 fi
 echo "---------------------------------------------arachni https scans; done."
 
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni_reporter \
 /opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}_${DATE}.html.zip
+#for ((i=0; i<${#TARGETS[@]}; i++)); do
 #podman exec arachni /opt/arachni/bin/arachni_reporter \
 #/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[$i]}.afr \
 #--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGETS[$i]}.html.zip
