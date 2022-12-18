@@ -22,10 +22,6 @@ linux64
 internet connection
 
 ...editing
-Burpsuite - editing
-Zap - done
-Arachni - done
-Nuclei - done
 
 ------------------------------------------------------------------
 comment
