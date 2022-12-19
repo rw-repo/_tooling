@@ -17,6 +17,14 @@ WEBPORT=#"8080"
 RESULT_DIR=./
 mkdir -p ./burp
 
+dnf update -y \
+&& dnf install podman podman-compose -y
+
+#curl -o /usr/local/bin/podman-compose \
+#https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
+#chmod +x /usr/local/bin/podman-compose
+#alias podman-compose=/usr/local/bin/podman-compose
+
 # ----------------------------------------------------------------------------------------------------- burpsuite;
 podman build -t burpsuite .
 podman run --rm -it --name burpsuite -p 8080:8080 -p 1337:1337 -d burpsuite
@@ -31,28 +39,25 @@ podman exec burpsuite curl -s -X POST "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY
 -d "{\"scope\":{\"include\":[{\"rule\":\"https://$TARGET:443\"}],\"type\":\"SimpleScope\"},\"urls\":[\"https://$TARGET:$WEBPORT\"]}"
 fi
 
-for a in {1..30}; 
-do 
-	podman exec burpsuite echo -n "[-] SCAN #$a: "
-	podman exec burpsuite curl -sI "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a" | grep HTTP | awk '{print $2}'
-	podman exec burpsuite BURP_STATUS=$(curl -s http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a \
-	| grep -o -P "crawl_and_audit.{1,100}" | cut -d\" -f3 | grep "remaining")
-while [[ ${#podman exec burpsuite BURP_STATUS} -gt "5" ]]; 
-do 
-	podman exec burpsuite BURP_STATUS=$(curl -s http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a \
-	| grep -o -P "crawl_and_audit.{1,100}" | cut -d\" -f3 | grep "remaining")
-	podman exec burpsuite BURP_STATUS_FULL=$(curl -s http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a \
-	| grep -o -P "crawl_and_audit.{1,100}" | cut -d\" -f3)
-	podman exec burpsuite echo "[i] STATUS: $BURP_STATUS_FULL"
-	podman exec burpsuite sleep 15
+for a in {1..30}; do 
+podman exec burpsuite echo -n "[-] SCAN #$a: "
+podman exec burpsuite curl -sI "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a" | grep HTTP | awk '{print $2}'
+podman exec burpsuite BURP_STATUS=$(curl -s http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a \
+| grep -o -P "crawl_and_audit.{1,100}" | cut -d\" -f3 | grep "remaining")
+while [[ ${#podman exec burpsuite BURP_STATUS} -gt "5" ]]; do 
+podman exec burpsuite BURP_STATUS=$(curl -s http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a \
+| grep -o -P "crawl_and_audit.{1,100}" | cut -d\" -f3 | grep "remaining")
+podman exec burpsuite BURP_STATUS_FULL=$(curl -s http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a \
+| grep -o -P "crawl_and_audit.{1,100}" | cut -d\" -f3)
+podman exec burpsuite echo "[i] STATUS: $BURP_STATUS_FULL"
+podman exec burpsuite sleep 15
 	done
 done
 
-for a in {1..30}; 
-do
-	podman exec burpsuite curl -s "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a" \
-	| jq '.issue_events[].issue | "[" + .severity + "] " + .name + " - " + .origin + .path' | sort -u | sed 's/\"//g' \
-	| tee $RESULT_DIR/web/burpsuite-$TARGET-$a.log
+for a in {1..30}; do
+podman exec burpsuite curl -s "http://$BURP_HOST:$BURP_PORT/$BURP_APIKEY/v0.1/scan/$a" \
+| jq '.issue_events[].issue | "[" + .severity + "] " + .name + " - " + .origin + .path' | sort -u | sed 's/\"//g' \
+| tee $RESULT_DIR/web/burpsuite-$TARGET-$a.log
 done
 podman cp burpsuite:$RESULT_DIR/burp $RESULT_DIR/burp
 echo "---------------------------------------------burp scan; done."
