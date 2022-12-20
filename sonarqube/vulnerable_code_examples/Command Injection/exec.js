@@ -3,6 +3,11 @@ const router = express.Router()
 
 const { exec, spawn }  = require('child_process');
 
+/* do not spawn a shell, example remediation
+const cp = require('child_process');
+
+cp.spawnSync("/usr/bin/file.exe", { shell: false }); // Compliant
+*/
 
 router.post('/ping', (req,res) => {
     exec(`${req.body.url}`, (error) => {
