@@ -7,6 +7,13 @@ class login {
   public $password = "Insanity";
   public $role = "MUGGLE";
 }
+/*
+$user = getUser();
+$password = getPassword(); // Compliant
+
+$httpUrl = "https://example.domain?user=$user&password=$password" // Compliant
+$sshUrl = "ssh://$user:$password@example.domain" // Compliant
+*/
 $one = new login();
 $a = serialize($one);
 echo "Example of an object:\n$a\n\n";
