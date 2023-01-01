@@ -182,7 +182,7 @@ echo "---------------------------------------------getting sub directories enume
 podman build -t subfinder .
 podman run --rm -it --name subfinder -d subfinder
 podman exec subfinder mkdir -p /results
-podman exec subfinder subfinder -d ${MODE}://${TARGET} -o /results/subfinder-${TARGET}-${DATE}.log
+podman exec subfinder subfinder -d ${TARGET} -o /results/subfinder-${TARGET}-${DATE}.log
 podman cp subfinder:/results $RESULT_DIR/subfinder
 
 #cleanup
