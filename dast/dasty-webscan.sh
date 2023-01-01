@@ -165,7 +165,25 @@ podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuc
 echo "---------------------------------------------nuclei scans; done."
 
 podman cp nuclei:/results $RESULT_DIR/nuclei
-cd ..
+cd ../subfinder
+
+tee ./Dockerfile<<EOF
+FROM golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f AS build-env
+RUN apk add build-base
+RUN go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+FROM alpine:3.17.0@sha256:c0d488a800e4127c334ad20d61d7bc21b4097540327217dfab52262adc02380c
+RUN apk -U upgrade --no-cache \
+    && apk add --no-cache bind-tools ca-certificates
+COPY --from=build-env /go/bin/subfinder /usr/local/bin/subfinder
+EOF
+
+echo "---------------------------------------------getting sub directories enumeration"
+podman build -t subfinder .
+podman run --rm -it --name subfinder -d subfinder
+podman exec subfinder mkdir -p /results
+podman exec subfinder subfinder -d ${MODE}://${TARGET} -o /results/subfinder-${TARGET}-${DATE}.log
+podman cp subfinder:/results $RESULT_DIR/subfinder
 
 #cleanup
 #podman system reset -f
