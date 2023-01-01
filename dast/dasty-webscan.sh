@@ -148,7 +148,6 @@ update and run nuclei scans, modify here to use templates found in:
 podman exec nuclei ls /root/nuclei-templates
 podman exec nuclei nuclei -c $THREADS -t cves/ -t vulnerabilities/ \
 -u ${MODE}://$TARGET -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
-runs all templates against target
 
 comment
 
