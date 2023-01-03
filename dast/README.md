@@ -2,7 +2,7 @@
 
 > **Note**
 >
-> Using podman-compose. (1.0.4 [development release] and podman 4.1.1)
+> Using el8/9 distro with podman-compose. (1.0.4 [development release] and podman 4.1.1)
 >
 > sudo curl -o /usr/local/bin/podman-compose \
 >
@@ -40,7 +40,7 @@ THREADS=35
 ZAP_API_ALLOW_IP="127.0.0.1"
 RESULT_DIR=./
 
-mkdir -p ./{owasp-zap,arachni,nuclei,subfinder}
+mkdir -p ./{owasp-zap,arachni,nuclei}
 ```
 
 ## OWASP Zed Attack Proxy
