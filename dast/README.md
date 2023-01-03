@@ -22,7 +22,10 @@
 >
 > [What is Nuclei?>](https://projectdiscovery.io/)
 
+```sh
+#install podman/podman-compose from package repo
 sudo dnf install podman podman-compose -y
+```
 
 #
 
