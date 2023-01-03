@@ -16,10 +16,11 @@
 >
 > [Installing Podman>](https://podman.io/getting-started/installation)
 >
-> [What is Nessus?>](https://www.tenable.com/products/nessus)
+> [What is OWASP ZAP?>](https://www.zaproxy.org/)
 >
-> [Activation Code>](https://www.tenable.com/products/nessus/activation-code)
+> [What is Arachni?>](https://www.arachni-scanner.com/)
 >
+> [What is Nuclei?>](https://projectdiscovery.io/)
 
 sudo dnf install podman podman-compose -y
 
