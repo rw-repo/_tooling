@@ -46,7 +46,7 @@ THREADS=35
 ZAP_API_ALLOW_IP="127.0.0.1"
 RESULT_DIR=./
 
-mkdir -p ./{owasp-zap,arachni,nuclei}
+mkdir -p ./{owasp-zap,arachni,nuclei,subfinder}
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
 #podman build -t owasp-zap -f ./zap/Dockerfile
@@ -152,7 +152,10 @@ podman exec nuclei nuclei -c $THREADS -t cves/ -t vulnerabilities/ \
 comment
 
 podman exec nuclei nuclei --update
+sleep 5s
 podman exec nuclei nuclei --ut
+sleep 5s
+podman exec nuclei nuclei -ut
 podman exec nuclei mkdir -p /results
 
 echo "---------------------------------------------nuclei full scan init; warn: this could take some time..."
