@@ -86,3 +86,7 @@ docker run --rm -it --network api-firewall-network --network-alias api-firewall 
     -e APIFW_REQUEST_VALIDATION=<REQUEST_VALIDATION_MODE> -e APIFW_RESPONSE_VALIDATION=<RESPONSE_VALIDATION_MODE> \
     -p 8088:8088 wallarm/api-firewall:v0.6.9
 ```
+
+## How it works:
+
+<img src="https://raw.githubusercontent.com/wallarm/api-firewall/main/images/Firewall%20opensource%20-%20vertical.gif">
