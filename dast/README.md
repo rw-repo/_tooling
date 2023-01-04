@@ -66,7 +66,7 @@ podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 
 cd arachni
 #build arachni
-tee ./Dockerfile<<EOF
+tee $RESULT_DIR/arachni/Dockerfile<<EOF
 FROM docker.io/debian:stable@sha256:1f51b4ada92150468a245a7aca50710bff8b07b774e164d9136a8e00cc74a57a
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
@@ -79,7 +79,7 @@ USER arachni
 CMD ["/bin/bash"]
 EOF
 
-podman build -t arachni .
+podman build -t arachni -f $RESULT_DIR/arachni/Dockerfile
 podman run --rm -it --name arachni -d arachni
 
 #execute scan
@@ -99,9 +99,7 @@ podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 ## Nuclei            <img src="https://escape.tech/blog/content/images/2021/11/image-11.png" width=20% height=20%>
 
 ```sh
-
-cd ../nuclei
-tee ./Dockerfile<<EOF
+tee $RESULT_DIR/nuclei/Dockerfile<<EOF
 FROM docker.io/golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f as build-env
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
@@ -110,7 +108,7 @@ RUN apk add --no-cache bind-tools ca-certificates chromium
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
 EOF
 
-podman build -t nuclei .
+podman build -t nuclei -f $RESULT_DIR/nuclei/Dockerfile
 podman run --rm -it --name nuclei -d nuclei
 
 #update templates
