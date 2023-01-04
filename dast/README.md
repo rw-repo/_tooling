@@ -14,10 +14,6 @@
 >
 > [What is Nuclei?>](https://projectdiscovery.io/)
 >
-> You can always pay for a fancy tool, most dast tools are all the same.  You're paying for the web UI...
->
-> It's like movies today.  Remakes of remakes of remakes, but I digress.
->
 >   Disclaimer: scan only against websites where you have permission/authorization.
 >
 >   Using "testhtml5.vulnweb.com" for this demo.
