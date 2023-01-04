@@ -128,3 +128,9 @@ podman exec nuclei mkdir -p /results
 podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
 podman cp nuclei:/results $RESULT_DIR/nuclei
 ```
+
+```sh
+#cleanup
+podman system reset -f
+dnf remove podman podman-compose && rm -f /usr/local/bin/podman-compose
+```
