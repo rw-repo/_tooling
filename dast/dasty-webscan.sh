@@ -46,7 +46,7 @@ THREADS=35
 ZAP_API_ALLOW_IP="127.0.0.1"
 RESULT_DIR=./
 
-mkdir -p ./{owasp-zap,arachni,nuclei,subfinder}
+mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,subfinder}
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
 #podman build -t owasp-zap -f ./zap/Dockerfile
@@ -55,8 +55,7 @@ genkey() {
 }
 key=$(genkey)
 podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u zap -p 8080:8080 -it --name owasp-zap \
--d docker.io/owasp/zap2docker-stable@sha256:aabcb321ec17686a93403a6958541d8646c453fe9437ea43ceafc177c0308611 \
-zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
+-d docker.io/owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
 
 podman exec owasp-zap mkdir -p /zap/results
@@ -69,10 +68,9 @@ echo "---------------------------------------------zap scan; done."
 podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 
 # ----------------------------------------------------------------------------------------------------- arachni;
-cd arachni
 #build arachni
-tee ./Dockerfile<<EOF
-FROM docker.io/debian:stable@sha256:1f51b4ada92150468a245a7aca50710bff8b07b774e164d9136a8e00cc74a57a
+tee $RESULT_DIR/arachni/Dockerfile<<EOF
+FROM docker.io/debian:stable
 
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
@@ -86,7 +84,7 @@ USER arachni
 CMD ["/bin/bash"]
 EOF
 
-podman build -t arachni .
+podman build -t arachni -f $RESULT_DIR/arachni/Dockerfile
 podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni
 echo "---------------------------------------------arachni build; done."
 
@@ -126,8 +124,7 @@ podman exec arachni /opt/arachni/bin/arachni_reporter \
 podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 
 # ----------------------------------------------------------------------------------------------------- nuclei;
-cd ../nuclei
-tee ./Dockerfile<<EOF
+tee $RESULT_DIR/nuclei/Dockerfile<<EOF
 FROM docker.io/golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f as build-env
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
@@ -138,7 +135,7 @@ RUN apk add --no-cache bind-tools ca-certificates chromium
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
 EOF
 
-podman build -t nuclei .
+podman build -t nuclei -f $RESULT_DIR/nuclei/Dockerfile
 podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name nuclei -d nuclei
 echo "---------------------------------------------nuclei build; done."
 
@@ -153,8 +150,6 @@ comment
 
 podman exec nuclei nuclei --update
 sleep 5s
-podman exec nuclei nuclei --ut
-sleep 5s
 podman exec nuclei nuclei -ut
 podman exec nuclei mkdir -p /results
 
@@ -164,24 +159,22 @@ podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuc
 #for ((i=0; i<${#TARGETS[@]}; i++)); do
 #podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}-${DATE}.log
 #done
+podman cp nuclei:/results $RESULT_DIR/nuclei
 echo "---------------------------------------------nuclei scans; done."
 
-podman cp nuclei:/results $RESULT_DIR/nuclei
-cd ../subfinder
-
-tee ./Dockerfile<<EOF
-FROM golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f AS build-env
+tee $RESULT_DIR/subfinder/Dockerfile<<EOF
+FROM golang:1.19.4-alpine AS build-env
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 
-FROM alpine:3.17.0@sha256:c0d488a800e4127c334ad20d61d7bc21b4097540327217dfab52262adc02380c
+FROM alpine:3.17.0
 RUN apk -U upgrade --no-cache \
     && apk add --no-cache bind-tools ca-certificates
 COPY --from=build-env /go/bin/subfinder /usr/local/bin/subfinder
 EOF
 
-echo "---------------------------------------------getting sub directories enumeration"
-podman build -t subfinder .
+echo "---------------------------------------------getting subdomains enumeration"
+podman build -t subfinder -f $RESULT_DIR/subfinder/Dockerfile
 podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name subfinder -d subfinder
 podman exec subfinder mkdir -p /results
 podman exec subfinder subfinder -d ${TARGET} -o /results/subfinder-${TARGET}-${DATE}.log
