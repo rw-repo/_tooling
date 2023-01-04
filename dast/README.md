@@ -62,7 +62,7 @@ genkey() {
 }
 key=$(genkey)
 podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u zap -p 8080:8080 -it --name owasp-zap \
--d docker.io/owasp/zap2docker-stable@sha256:aabcb321ec17686a93403a6958541d8646c453fe9437ea43ceafc177c0308611 \
+-d docker.io/owasp/zap2docker-stable@sha256:215795fee30319d4d46007e1d9bb0999d9bafdfa423bcfb690de3d40e642f302 \
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
 
@@ -76,7 +76,7 @@ podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 ```sh
 #build arachni
 tee $RESULT_DIR/arachni/Dockerfile<<EOF
-FROM docker.io/debian:stable@sha256:1f51b4ada92150468a245a7aca50710bff8b07b774e164d9136a8e00cc74a57a
+FROM docker.io/debian:stable@sha256:a88c75ef79190cc28793a66d14acb21787976d1564e11fddc05a3043eb70501f
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
     wget ca-certificates chromium -y && apt-get autoremove -y
@@ -109,7 +109,7 @@ podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 
 ```sh
 tee $RESULT_DIR/nuclei/Dockerfile<<EOF
-FROM docker.io/golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f as build-env
+FROM docker.io/golang:1.19.4-alpine@sha256:766625f2182dacec4c8774355a65a81a3b73acb0b4287b6a32a8efc185aede2c as build-env
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 FROM alpine:3.17.0@sha256:c0d488a800e4127c334ad20d61d7bc21b4097540327217dfab52262adc02380c
