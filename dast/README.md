@@ -70,7 +70,7 @@ podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/resu
 podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 ```
 
-## Arachni            <img src="https://www.arachni-scanner.com/wp-content/uploads/2013/03/arachni-web-logo.png" width=20% height=20%>
+## Arachni            <img src="https://www.arachni-scanner.com/wp-content/uploads/2013/03/arachni-web-logo.png" width=40% height=40%>
 
 ```sh
 #build arachni
