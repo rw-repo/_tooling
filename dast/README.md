@@ -21,6 +21,18 @@
 > [What is Arachni?>](https://www.arachni-scanner.com/)
 >
 > [What is Nuclei?>](https://projectdiscovery.io/)
+>
+>   Disclaimer: scan only against websites where you have permission/authorization.
+>
+>   Using "testhtml5.vulnweb.com" for this demo.
+>
+>   Warning: This is an HTML5 application that is vulnerable by design. This is not a real collection of tweets. 
+>
+>   This application was created so that you can test your Acunetix, other tools, or your manual penetration testing skills. 
+>
+>   The application code is prone to attacks such as Cross-site Scripting (XSS) and XML External Entity (XXE). 
+>
+>   Links presented on this site have no affiliation to the site and are here only as samples.
 
 ```sh
 #install podman/podman-compose from package repo
