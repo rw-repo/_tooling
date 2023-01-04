@@ -89,4 +89,4 @@ docker run --rm -it --network api-firewall-network --network-alias api-firewall 
 
 ## How it works:
 
-<img src="https://raw.githubusercontent.com/wallarm/api-firewall/main/images/Firewall%20opensource%20-%20vertical.gif">
+<img src="https://raw.githubusercontent.com/wallarm/api-firewall/main/images/Firewall%20opensource%20-%20vertical.gif" width=50% height=50%>
