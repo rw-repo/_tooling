@@ -18,12 +18,14 @@ mkdir -p ./scan_results/{trivy-cache,trivy-output,syft,grype}
 #example,
 declare -a D_IMAGE=(
 #"my_repo/dev/my_webapp:v1"
-"docker.io/wallarm/api-firewall:latest"
-"docker.io/bitnami/nginx:latest")
+"docker.io/owasp/zap2docker-stable:latest"
+"localhost/arachni"
+"localhost/nuclei")
 declare -a R_NAME=(
 #"my_webapp"
-"api-firewall"
-"nginx")
+"owasp-zap"
+"arachni"
+"nuclei")
 
 for ((i=0; i<${#D_IMAGE[@]}; i++)); do
 # json output
