@@ -2,14 +2,14 @@
 # \password postgres
 # \q
 # CREATE DATABASE arachni_production TEMPLATE template0;
-# CREATE USER arachni WITH PASSWORD 'secret' CREATEDB;
+# CREATE USER arachni WITH ENCRYPTED PASSWORD 'Enter a password' CREATEDB;
 #
 # Configure database and get it ready for Arachni
 #./arachni/bin/arachni_web_task db:create
 #./arachni/bin/arachni_web_task db:migrate
 #./arachni/bin/arachni_web_task db:setup
 #
-#   CREATE USER arachni WITH PASSWORD 'secret' CREATEDB;
+#   CREATE USER arachni WITH ENCRYPTED PASSWORD 'Enter a password' CREATEDB;
 #
 # (Update the credentials in both the above SQL query and the bellow settings appropriately.)
 
