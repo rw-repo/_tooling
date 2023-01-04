@@ -54,7 +54,7 @@ genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
 key=$(genkey)
-podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap \
+podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u zap -p 8080:8080 -it --name owasp-zap \
 -d docker.io/owasp/zap2docker-stable@sha256:aabcb321ec17686a93403a6958541d8646c453fe9437ea43ceafc177c0308611 \
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
@@ -87,7 +87,7 @@ CMD ["/bin/bash"]
 EOF
 
 podman build -t arachni .
-podman run --rm -it --name arachni -d arachni
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni
 echo "---------------------------------------------arachni build; done."
 
 if [ "$MODE" = http ]; then
@@ -139,7 +139,7 @@ COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
 EOF
 
 podman build -t nuclei .
-podman run --rm -it --name nuclei -d nuclei
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name nuclei -d nuclei
 echo "---------------------------------------------nuclei build; done."
 
 <<comment
@@ -182,7 +182,7 @@ EOF
 
 echo "---------------------------------------------getting sub directories enumeration"
 podman build -t subfinder .
-podman run --rm -it --name subfinder -d subfinder
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name subfinder -d subfinder
 podman exec subfinder mkdir -p /results
 podman exec subfinder subfinder -d ${TARGET} -o /results/subfinder-${TARGET}-${DATE}.log
 podman cp subfinder:/results $RESULT_DIR/subfinder
