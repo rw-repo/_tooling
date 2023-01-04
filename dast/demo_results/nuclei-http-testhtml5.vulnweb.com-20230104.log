@@ -1,0 +1,24 @@
+[nginx-version] [http] [info] http://testhtml5.vulnweb.com [nginx/1.19.0]
+[tech-detect:angularjs] [http] [info] http://testhtml5.vulnweb.com
+[tech-detect:google-font-api] [http] [info] http://testhtml5.vulnweb.com
+[tech-detect:angular] [http] [info] http://testhtml5.vulnweb.com
+[tech-detect:nginx] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:content-security-policy] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:x-frame-options] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:access-control-expose-headers] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:strict-transport-security] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:permissions-policy] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:x-content-type-options] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:referrer-policy] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:clear-site-data] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:access-control-allow-credentials] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:access-control-max-age] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:access-control-allow-methods] [http] [info] http://testhtml5.vulnweb.com
+[http-missing-security-headers:access-control-allow-headers] [http] [info] http://testhtml5.vulnweb.com
+[options-method] [http] [info] http://testhtml5.vulnweb.com [HEAD, OPTIONS, GET]
+[txt-fingerprint] [dns] [info] testhtml5.vulnweb.com ["v=spf1 -all"]
+[waf-detect:nginxgeneric] [http] [info] http://testhtml5.vulnweb.com/
