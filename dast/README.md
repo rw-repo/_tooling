@@ -33,16 +33,16 @@ sudo dnf install podman podman-compose -y
 #set env variables and make output directories
 
 DATE=$(date +"%Y%m%d")
-MODE="http" #or https
-TARGET="testhtml5.vulnweb.com"
+MODE=http
+TARGET=testhtml5.vulnweb.com
 THREADS=35
-ZAP_API_ALLOW_IP="127.0.0.1"
+ZAP_API_ALLOW_IP=127.0.0.1
 RESULT_DIR=./
 
-mkdir -p ./{owasp-zap,arachni,nuclei}
+mkdir -p $RESULT_DIR{owasp-zap,arachni,nuclei}
 ```
 
-## OWASP Zed Attack Proxy  <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
+## OWASP Zed Attack Proxy            <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
 
 ```sh
 
@@ -60,7 +60,7 @@ podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/resu
 podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 ```
 
-## Arachni  <img src="https://camo.githubusercontent.com/1ba175bad30bd9869f493975a08eb65a7a16e944e528ba22e8eb4df571319fd2/687474703a2f2f7777772e61726163686e692d7363616e6e65722e636f6d2f6c617267652d6c6f676f2e706e67" width=20% height=20%>
+## Arachni            <img src="https://camo.githubusercontent.com/1ba175bad30bd9869f493975a08eb65a7a16e944e528ba22e8eb4df571319fd2/687474703a2f2f7777772e61726163686e692d7363616e6e65722e636f6d2f6c617267652d6c6f676f2e706e67" width=20% height=20%>
 
 ```sh
 
@@ -96,7 +96,7 @@ podman exec arachni /opt/arachni/bin/arachni_reporter \
 podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 ```
 
-## Nuclei  <img src="https://escape.tech/blog/content/images/2021/11/image-11.png" width=20% height=20%>
+## Nuclei            <img src="https://escape.tech/blog/content/images/2021/11/image-11.png" width=20% height=20%>
 
 ```sh
 
