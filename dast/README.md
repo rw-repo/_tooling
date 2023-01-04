@@ -51,7 +51,7 @@ THREADS=35
 ZAP_API_ALLOW_IP=127.0.0.1
 RESULT_DIR=./
 
-mkdir -p $RESULT_DIR{owasp-zap,arachni,nuclei}
+mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei}
 ```
 
 ## OWASP Zed Attack Proxy            <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
