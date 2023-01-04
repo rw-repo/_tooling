@@ -61,7 +61,7 @@ genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
 key=$(genkey)
-podman run --rm -v $(pwd):/zap/wrk/:rw -u zap -p 8080:8080 -it --name owasp-zap \
+podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u zap -p 8080:8080 -it --name owasp-zap \
 -d docker.io/owasp/zap2docker-stable@sha256:aabcb321ec17686a93403a6958541d8646c453fe9437ea43ceafc177c0308611 \
 zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
@@ -89,7 +89,7 @@ CMD ["/bin/bash"]
 EOF
 
 podman build -t arachni -f $RESULT_DIR/arachni/Dockerfile
-podman run --rm -it --name arachni -d arachni
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni
 
 #execute scan
 podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
@@ -119,7 +119,7 @@ EOF
 
 #build Nuclei
 podman build -t nuclei -f $RESULT_DIR/nuclei/Dockerfile
-podman run --rm -it --name nuclei -d nuclei
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name nuclei -d nuclei
 
 #update templates
 podman exec nuclei nuclei -ut
