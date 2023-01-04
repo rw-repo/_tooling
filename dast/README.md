@@ -45,7 +45,6 @@ mkdir -p $RESULT_DIR{owasp-zap,arachni,nuclei}
 ## OWASP Zed Attack Proxy            <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
 
 ```sh
-
 genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
@@ -63,8 +62,6 @@ podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 ## Arachni            <img src="https://camo.githubusercontent.com/1ba175bad30bd9869f493975a08eb65a7a16e944e528ba22e8eb4df571319fd2/687474703a2f2f7777772e61726163686e692d7363616e6e65722e636f6d2f6c617267652d6c6f676f2e706e67" width=20% height=20%>
 
 ```sh
-
-cd arachni
 #build arachni
 tee $RESULT_DIR/arachni/Dockerfile<<EOF
 FROM docker.io/debian:stable@sha256:1f51b4ada92150468a245a7aca50710bff8b07b774e164d9136a8e00cc74a57a
@@ -108,6 +105,7 @@ RUN apk add --no-cache bind-tools ca-certificates chromium
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
 EOF
 
+#build Nuclei
 podman build -t nuclei -f $RESULT_DIR/nuclei/Dockerfile
 podman run --rm -it --name nuclei -d nuclei
 
