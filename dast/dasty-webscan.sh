@@ -125,11 +125,11 @@ podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 
 # ----------------------------------------------------------------------------------------------------- nuclei;
 tee $RESULT_DIR/nuclei/Dockerfile<<EOF
-FROM docker.io/golang:1.19.4-alpine@sha256:f33331e12ca70192c0dbab2d0a74a52e1dd344221507d88aaea605b0219a212f as build-env
+FROM docker.io/golang:1.19.4-alpine as build-env
 RUN apk add build-base
 RUN go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
-FROM alpine:3.17.0@sha256:c0d488a800e4127c334ad20d61d7bc21b4097540327217dfab52262adc02380c
+FROM alpine:3.17.0
 RUN apk add --no-cache bind-tools ca-certificates chromium
 
 COPY --from=build-env /go/bin/nuclei /usr/local/bin/nuclei
@@ -181,5 +181,5 @@ podman exec subfinder subfinder -d ${TARGET} -o /results/subfinder-${TARGET}-${D
 podman cp subfinder:/results $RESULT_DIR/subfinder
 
 #cleanup
-#podman system reset -f
-#dnf remove podman podman-compose -y
+podman system reset -f
+dnf remove podman podman-compose -y && rm -f /usr/local/bin/podman-compose
