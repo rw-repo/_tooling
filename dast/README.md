@@ -134,3 +134,7 @@ podman cp nuclei:/results $RESULT_DIR/nuclei
 podman system reset -f
 sudo dnf remove podman podman-compose && rm -f /usr/local/bin/podman-compose
 ```
+
+To-do's:
+generate ansible playbooks
+generate k8s services
