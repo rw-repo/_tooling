@@ -54,7 +54,7 @@ RESULT_DIR=./
 mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei}
 ```
 
-## OWASP Zed Attack Proxy            <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
+## <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
 
 ```sh
 genkey() {
@@ -70,7 +70,7 @@ podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/resu
 podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 ```
 
-## Arachni            <img src="https://www.arachni-scanner.com/wp-content/uploads/2013/03/arachni-web-logo.png" width=40% height=40%>
+## <img src="https://www.arachni-scanner.com/wp-content/uploads/2013/03/arachni-web-logo.png" width=40% height=40%>
 
 ```sh
 #build arachni
