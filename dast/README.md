@@ -2,7 +2,7 @@
 
 > **Note**
 >
-> Using el8/9 distro with podman-compose. (1.0.4 [development release] and podman 4.1.1)
+> Using el8/9 distro with podman-compose. (1.0.4 [development release] and podman 4.2.0)
 >
 > [What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
 >
