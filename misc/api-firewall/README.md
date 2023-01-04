@@ -31,7 +31,7 @@ services:
     image: <repo/image>
     restart: on-failure
     ports:
-      - 8080:8080
+      - <enter webport>
     stop_grace_period: 1s
     networks:
       - api-network
