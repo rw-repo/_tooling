@@ -71,26 +71,23 @@ podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 ## <img src="https://www.arachni-scanner.com/wp-content/uploads/2013/03/arachni-web-logo.png" width=40% height=40%>
 
 ```sh
-#build arachni
 tee $RESULT_DIR/arachni/Dockerfile<<EOF
 FROM docker.io/debian:stable
 ENV DEBIAN_FRONTEND=noninteractive \
-  LANG=en_US.UTF-8
+    LANG=en_US.UTF-8
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
     wget ca-certificates chromium -y \
     && apt-get clean -yq \
     && apt-get autoremove -yq \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && truncate -s 0 /var/log/*log \
     && wget -qO- https://github.com/Arachni/arachni/releases/download/v1.6.1.3/arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz \
     | tar zx && mv /arachni-1.6.1.3-0.6.1.1 /opt/arachni
 RUN groupadd -r arachni && useradd -r -g arachni arachni \
     && chown -R arachni:arachni /opt/arachni
 USER arachni
-CMD ["/bin/bash"]
 EOF
 
+#build arachni
 podman build -t arachni -f $RESULT_DIR/arachni/Dockerfile
 podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni
 
@@ -105,6 +102,7 @@ podman exec arachni /opt/arachni/bin/arachni_reporter \
 /opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}_${DATE}.html.zip
 
+#get results
 podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 ```
 
