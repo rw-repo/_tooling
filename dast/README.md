@@ -52,7 +52,7 @@ RESULT_DIR=./
 mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,wapiti}
 ```
 
-## <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
+## <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=40% height=40%>
 
 ```sh
 genkey() {
