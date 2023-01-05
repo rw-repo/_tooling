@@ -14,6 +14,8 @@
 >
 > [What is Nuclei?>](https://projectdiscovery.io/)
 >
+> [What is Wapiti?>](https://wapiti-scanner.github.io/)
+>
 >   Disclaimer: scan only against websites where you have permission/authorization.
 >
 >   Using "testhtml5.vulnweb.com" for this demo.
