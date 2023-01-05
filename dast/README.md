@@ -74,13 +74,19 @@ podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
 #build arachni
 tee $RESULT_DIR/arachni/Dockerfile<<EOF
 FROM docker.io/debian:stable
+ENV DEBIAN_FRONTEND=noninteractive \
+  LANG=en_US.UTF-8
 RUN apt-get update -y && apt-get install build-essential \
     libcurl4 libcurl4-openssl-dev ruby ruby-dev \
-    wget ca-certificates chromium -y && apt-get autoremove -y
-RUN wget -qO- https://github.com/Arachni/arachni/releases/download/v1.6.1.3/arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz \
+    wget ca-certificates chromium -y \
+    && apt-get clean -yq \
+    && apt-get autoremove -yq \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && truncate -s 0 /var/log/*log \
+    && wget -qO- https://github.com/Arachni/arachni/releases/download/v1.6.1.3/arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz \
     | tar zx && mv /arachni-1.6.1.3-0.6.1.1 /opt/arachni
-RUN groupadd -r arachni && useradd -r -g arachni arachni
-RUN chown -R arachni:arachni /opt/arachni
+RUN groupadd -r arachni && useradd -r -g arachni arachni \
+    && chown -R arachni:arachni /opt/arachni
 USER arachni
 CMD ["/bin/bash"]
 EOF
