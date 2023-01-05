@@ -102,7 +102,7 @@ podman exec arachni /opt/arachni/bin/arachni_reporter \
 podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 ```
 
-## Nuclei            <img src="https://escape.tech/blog/content/images/2021/11/image-11.png" width=20% height=20%>
+## <img src="[https://escape.tech/blog/content/images/2021/11/image-11.png](https://1.bp.blogspot.com/-IywUo6ng-aA/Xqhh_Py83DI/AAAAAAAAGHA/xbkI1KWpuB0VnRyvdSoRWHM8tOEX0iD6QCLcBGAsYHQ/s1600/nuclei.png)" width=20% height=20%>
 
 ```sh
 tee $RESULT_DIR/nuclei/Dockerfile<<EOF
