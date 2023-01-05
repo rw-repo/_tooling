@@ -127,7 +127,7 @@ podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuc
 podman cp nuclei:/results $RESULT_DIR/nuclei
 ```
 
-## Wapiti            <img src="https://wapiti-scanner.github.io/wapiti_400.png" width=20% height=20%>
+## <img src="https://wapiti-scanner.github.io/wapiti_400.png" width=20% height=20%>
 
 ```sh
 tee $RESULT_DIR/wapiti/Dockerfile<<EOF
