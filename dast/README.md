@@ -47,7 +47,7 @@ THREADS=35
 ZAP_API_ALLOW_IP=127.0.0.1
 RESULT_DIR=./
 
-mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei}
+mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,wapiti}
 ```
 
 ## <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=20% height=20%>
@@ -123,6 +123,49 @@ podman exec nuclei mkdir -p /results
 #execute scan
 podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
 podman cp nuclei:/results $RESULT_DIR/nuclei
+```
+
+## Wapiti            <img src="https://www.kali.org/tools/wapiti/images/wapiti-logo.svg" width=20% height=20%>
+
+```sh
+tee $RESULT_DIR/wapiti/Dockerfile<<EOF
+FROM docker.io/debian:bullseye-slim as build
+ENV DEBIAN_FRONTEND=noninteractive \
+  LANG=en_US.UTF-8
+WORKDIR /usr/src/app/
+RUN apt-get update \
+  && apt-get install python3 python3-pip python3-setuptools ca-certificates wget unzip -y \
+  && apt-get clean -yq \
+  && apt-get autoremove -yq \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && truncate -s 0 /var/log/*log \
+  && wget https://github.com/wapiti-scanner/wapiti/archive/refs/heads/master.zip && unzip master.zip \
+  && mv ./wapiti-master/* ./
+RUN python3 setup.py install
+FROM debian:bullseye-slim
+ENV DEBIAN_FRONTEND=noninteractive \
+  LANG=en_US.UTF-8 \
+  PYTHONDONTWRITEBYTECODE=1
+RUN apt-get update \
+  && apt-get install python3 python3-setuptools -y \
+  && apt-get clean -yq \
+  && apt-get autoremove -yq \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && truncate -s 0 /var/log/*log
+COPY --from=build /usr/local/lib/python3.9/dist-packages/ /usr/local/lib/python3.9/dist-packages/
+COPY --from=build /usr/local/bin/wapiti /usr/local/bin/wapiti-getcookie /usr/local/bin/
+EOF
+
+#build Wapiti
+podman build -t wapiti -f $RESULT_DIR/wapiti/Dockerfile
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name wapiti -d wapiti
+
+#update and execute scan
+podman exec wapiti wapiti --update
+podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
+
+#get report
+podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
 ```
 
 ```sh
