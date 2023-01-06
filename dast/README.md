@@ -55,8 +55,8 @@ mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,wapiti}
 ## <img src="https://res.cloudinary.com/practicaldev/image/fetch/s--r24tUVpQ--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/8uadzrkmk3n3tige1kgx.png" width=40% height=40%>
 
 ```sh
-#generate random 24 char api key, container is meant to be built, run a scan, and then deleted.  
-#note if keeping zap persistent, use the Dockerfile found in the zap directory, builds and updates packages.
+#generate random 24 char api key, container is meant to be ran as user zap, run a scan, and then deleted.  
+#note: if keeping zap persistent, use the Dockerfile found in the zap directory, builds and updates packages.
 genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
