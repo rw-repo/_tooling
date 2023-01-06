@@ -68,6 +68,15 @@ podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u za
 -d docker.io/owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
 -config api.addrs.addr.regex=true -config api.key=$key
 
+<<comment
+
+#run zap from Dockerfile build
+podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u zap -p 8080:8080 -it --name owasp-zap \
+-d owasp-zap zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
+-config api.addrs.addr.regex=true -config api.key=$key
+
+comment
+
 #create result directory and run scan
 podman exec owasp-zap mkdir -p /zap/results
 podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/results/zap-report-${MODE}-${TARGET}-${DATE}.html
