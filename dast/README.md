@@ -182,7 +182,8 @@ podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
 ```sh
 #cleanup
 podman system reset -f
-sudo dnf remove podman podman-compose && rm -f /usr/local/bin/podman-compose
+sudo dnf remove podman podman-compose -y
+sudo rm -f /usr/local/bin/podman-compose
 ```
 
 To-do's:
