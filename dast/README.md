@@ -57,6 +57,7 @@ mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,wapiti}
 ```sh
 #generate random 24 char api key, container is meant to be ran as user zap, run a scan, and then deleted.  
 #note: if keeping zap persistent, use the Dockerfile found in the zap directory, builds and updates packages.
+#podman build -t owasp-zap -f ./zap/Dockerfile
 genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
