@@ -207,7 +207,7 @@ if [ "$SCAN_TYPE" = single ]; then
 podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
 elif [ "$SCAN_TYPE" = multiple ]; then
 for ((i=0; i<${#TARGETS[@]}; i++)); do
-podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET[$i]}
+podman exec wapiti wapiti -v2 -u ${MODE}://${TARGETS[$i]}
 done
 fi
 #get report(s)
