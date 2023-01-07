@@ -20,32 +20,35 @@ target and outputs results in $RESULT_DIR
 ------------------------------------------------------------------
 comment
 
+#install podman and pre-req's for podman-compose like buildah, etc.
 dnf update -y \
 && dnf install podman podman-compose -y
 
-#curl -o /usr/local/bin/podman-compose \
-#https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
-#chmod +x /usr/local/bin/podman-compose
-#alias podman-compose=/usr/local/bin/podman-compose
+#install latest release of podman-compose (devel)
+curl -o /usr/local/bin/podman-compose \
+https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
+chmod +x /usr/local/bin/podman-compose
+alias podman-compose=/usr/local/bin/podman-compose
 
+#set env variables for scans
 DATE=$(date +"%Y%m%d")
 MODE="http" #or https
+SCAN_TYPE=single #or multiple
 TARGET="testhtml5.vulnweb.com"
 WEBPORT=#"8080"
-#declare -a TARGETS=(
-#"google-gruyere.appspot.com"
-#"testhtml5.vulnweb.com"
-#"HackThisSite.org"
-#"www.root-me.org")
-#declare -a APP_NAME=(
-#"google"
-#"hackthissite"
-#"testhtml5"
-#"rootme")
+declare -a TARGETS=(
+"google-gruyere.appspot.com"
+"testhtml5.vulnweb.com"
+"http://itsecgames.com")
+declare -a APP_NAME=(
+"google"
+"testhtml5"
+"itsecgames")
 THREADS=35
 ZAP_API_ALLOW_IP="127.0.0.1"
-RESULT_DIR=./
+RESULT_DIR=$(pwd) #or state explicit directory to offload scan results to
 
+#make output directories
 mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,subfinder}
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
@@ -53,16 +56,20 @@ mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,subfinder}
 genkey() {
     cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
 }
-key=$(genkey)
+
 podman run --rm -v $(pwd):/zap/wrk/:rw -v /etc/localtime:/etc/localtime:ro -u zap -p 8080:8080 -it --name owasp-zap \
 -d docker.io/owasp/zap2docker-stable zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=$ZAP_API_ALLOW_IP \
--config api.addrs.addr.regex=true -config api.key=$key
+-config api.addrs.addr.regex=true -config api.key=$(genkey)
 
 podman exec owasp-zap mkdir -p /zap/results
+
+if [ "$SCAN_TYPE" = single ]; then
 podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/results/zap-report-${MODE}-${TARGET}-${DATE}.html
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-#podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/results/zap-report-${MODE}-${APP_NAME[$i]}-${DATE}.html
-#done
+elif [ "$SCAN_TYPE" = multiple ]; then
+for ((i=0; i<${#TARGETS[@]}; i++)); do
+podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/results/zap-report-${MODE}-${APP_NAME[$i]}-${DATE}.html
+done
+fi
 echo "---------------------------------------------zap scan; done."
 
 podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
@@ -88,39 +95,33 @@ podman build -t arachni -f $RESULT_DIR/arachni/Dockerfile
 podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni
 echo "---------------------------------------------arachni build; done."
 
-if [ "$MODE" = http ]; then
+if [ "$SCAN_TYPE" = single ]; then
 podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
 --report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --output-only-positives ${MODE}://$TARGET
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-#podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
-#--report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[i]}.afr \
-#--output-only-positives ${MODE}://${TARGETS[$i]}
-#done
-echo "---------------------------------------------arachni http scans; done."
 
-elif [ "$MODE" = https ]; then
-podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
+elif [ "$SCAN_TYPE" = multiple ]; then
+for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
---report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
---output-only-positives --scope-https-only ${MODE}://$TARGET
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-#podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
-#--report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[i]}.afr \
-#--output-only-positives --scope-https-only ${MODE}://${TARGETS[$i]}
-#done
+--report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[i]}.afr \
+--output-only-positives ${MODE}://${TARGETS[$i]}
+done
 fi
-echo "---------------------------------------------arachni https scans; done."
+echo "---------------------------------------------arachni scans; done."
 
+if [ "$SCAN_TYPE" = single ]; then
 podman exec arachni /opt/arachni/bin/arachni_reporter \
 /opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}_${DATE}.html.zip
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-#podman exec arachni /opt/arachni/bin/arachni_reporter \
-#/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[$i]}.afr \
-#--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGETS[$i]}.html.zip
-#done
+
+elif [ "$SCAN_TYPE" = multiple ]; then
+for ((i=0; i<${#TARGETS[@]}; i++)); do
+podman exec arachni /opt/arachni/bin/arachni_reporter \
+/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${APP_NAME[$i]}.afr \
+--report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGETS[$i]}.html.zip
+done
+fi
 podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
 
 # ----------------------------------------------------------------------------------------------------- nuclei;
@@ -155,13 +156,18 @@ podman exec nuclei mkdir -p /results
 
 echo "---------------------------------------------nuclei full scan init; warn: this could take some time..."
 sleep 5s
+if [ "$SCAN_TYPE" = single ]; then
 podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
-#for ((i=0; i<${#TARGETS[@]}; i++)); do
-#podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}-${DATE}.log
-#done
+
+elif [ "$SCAN_TYPE" = multiple ]; then
+for ((i=0; i<${#TARGETS[@]}; i++)); do
+podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGETS[$i]} -o /results/nuclei-${MODE}-${APP_NAME[$i]}-${DATE}.log
+done
+fi
 podman cp nuclei:/results $RESULT_DIR/nuclei
 echo "---------------------------------------------nuclei scans; done."
 
+<<comment
 tee $RESULT_DIR/subfinder/Dockerfile<<EOF
 FROM golang:1.19.4-alpine AS build-env
 RUN apk add build-base
@@ -179,6 +185,7 @@ podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name subfinder -d subf
 podman exec subfinder mkdir -p /results
 podman exec subfinder subfinder -d ${TARGET} -o /results/subfinder-${TARGET}-${DATE}.log
 podman cp subfinder:/results $RESULT_DIR/subfinder
+comment
 
 #cleanup
 podman system reset -f
