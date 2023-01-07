@@ -18,7 +18,7 @@
 >
 >   Disclaimer: scan only against websites where you have permission/authorization.
 >
->   Using "testhtml5.vulnweb.com" for this demo.  The following readme shows how to manual build and scan with 
+>   Using "testhtml5.vulnweb.com" for this demo.  The following readme shows how to manually build and scan with 
 >
 >   each application.  Use "dasty-webscan.sh" to automate the process in a single shell script.
 >
