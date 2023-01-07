@@ -16,6 +16,11 @@ networks, and volumes.  Advise using a fresh install of linux arch64.
 Currently using vagrant to build oracle linux 9 VM and inject script,
 then delete the VM once reports are offloaded.
 
+Build an app, use for it's intended purpose, and delete the app.
+Reduce attack surface by not having every application persistent.
+
+Go forth and automate the world :-)
+
 ------------------------------------------------------------------
 comment
 
