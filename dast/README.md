@@ -2,19 +2,19 @@
 
 [What is DAST?>](https://en.wikipedia.org/wiki/Dynamic_application_security_testing)
 
+[What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
+
+[Installing Podman>](https://podman.io/getting-started/installation)
+
+[What is OWASP ZAP?>](https://www.zaproxy.org/)
+
+[What is Arachni?>](https://www.arachni-scanner.com/)
+
+[What is Nuclei?>](https://projectdiscovery.io/)
+
+[What is Wapiti?>](https://wapiti-scanner.github.io/)
+
 > **Note**
->
-> [What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
->
-> [Installing Podman>](https://podman.io/getting-started/installation)
->
-> [What is OWASP ZAP?>](https://www.zaproxy.org/)
->
-> [What is Arachni?>](https://www.arachni-scanner.com/)
->
-> [What is Nuclei?>](https://projectdiscovery.io/)
->
-> [What is Wapiti?>](https://wapiti-scanner.github.io/)
 >
 >   Disclaimer: scan only against websites where you have permission/authorization.
 >
