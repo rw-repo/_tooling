@@ -12,16 +12,6 @@ https://github.com/1N3/Sn1per
 
 > **Note**
 >
-> Using podman-compose. (1.0.4 and podman 4.1.1)
->
-> sudo curl -o /usr/local/bin/podman-compose \
->
-> https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
->
-> sudo chmod +x /usr/local/bin/podman-compose
->
-> alias podman-compose=/usr/local/bin/podman-compose
->
 > [What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
 >
 > [Installing Podman>](https://podman.io/getting-started/installation)
