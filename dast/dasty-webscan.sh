@@ -39,7 +39,7 @@ WEBPORT=#"8080"
 declare -a TARGETS=(
 "google-gruyere.appspot.com"
 "testhtml5.vulnweb.com"
-"http://itsecgames.com")
+"itsecgames.com")
 declare -a APP_NAME=(
 "google"
 "testhtml5"
