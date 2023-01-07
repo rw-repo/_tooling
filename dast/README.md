@@ -1,4 +1,6 @@
-#
+# Dynamic Application Security Testing
+
+[What is DAST?>](https://en.wikipedia.org/wiki/Dynamic_application_security_testing)
 
 > **Note**
 >
