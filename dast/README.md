@@ -18,7 +18,9 @@
 >
 >   Disclaimer: scan only against websites where you have permission/authorization.
 >
->   Using "testhtml5.vulnweb.com" for this demo.
+>   Using "testhtml5.vulnweb.com" for this demo.  The following readme shows how to manual build and scan with 
+>
+>   each application.  Use "dasty-webscan.sh" to automate the process in a single shell script.
 >
 >   Warning: This is an HTML5 application that is vulnerable by design. This is not a real collection of tweets. 
 >
