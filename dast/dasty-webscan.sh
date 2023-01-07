@@ -14,8 +14,8 @@ If using docker;
 alias podman=docker
 alias podman-compose=docker-compose
 
-Builds Zap, Arachni, Nuclei containers, executes scan against 
-target and outputs results in $RESULT_DIR
+Builds Zap, Arachni, Nuclei, Wapiti containers, executes scan against 
+target(s) and outputs results in $RESULT_DIR
 
 ------------------------------------------------------------------
 comment
@@ -166,6 +166,54 @@ done
 fi
 podman cp nuclei:/results $RESULT_DIR/nuclei
 echo "---------------------------------------------nuclei scans; done."
+
+# ----------------------------------------------------------------------------------------------------- wapiti;
+tee $RESULT_DIR/wapiti/Dockerfile<<EOF
+FROM docker.io/debian:bullseye-slim as build
+ENV DEBIAN_FRONTEND=noninteractive \
+  LANG=en_US.UTF-8
+WORKDIR /usr/src/app/
+RUN apt-get update \
+  && apt-get install python3 python3-pip python3-setuptools ca-certificates wget unzip -y \
+  && apt-get clean -yq \
+  && apt-get autoremove -yq \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && truncate -s 0 /var/log/*log \
+  && wget https://github.com/wapiti-scanner/wapiti/archive/refs/heads/master.zip && unzip master.zip \
+  && mv ./wapiti-master/* ./
+RUN python3 setup.py install
+FROM debian:bullseye-slim
+ENV DEBIAN_FRONTEND=noninteractive \
+  LANG=en_US.UTF-8 \
+  PYTHONDONTWRITEBYTECODE=1
+RUN apt-get update \
+  && apt-get install python3 python3-setuptools -y \
+  && apt-get clean -yq \
+  && apt-get autoremove -yq \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && truncate -s 0 /var/log/*log
+COPY --from=build /usr/local/lib/python3.9/dist-packages/ /usr/local/lib/python3.9/dist-packages/
+COPY --from=build /usr/local/bin/wapiti /usr/local/bin/wapiti-getcookie /usr/local/bin/
+EOF
+
+#build Wapiti
+podman build -t wapiti -f $RESULT_DIR/wapiti/Dockerfile
+podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name wapiti -d wapiti
+echo "---------------------------------------------wapiti build; done."
+
+#update and execute scan
+podman exec wapiti wapiti --update
+
+if [ "$SCAN_TYPE" = single ]; then
+podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
+elif [ "$SCAN_TYPE" = multiple ]; then
+for ((i=0; i<${#TARGETS[@]}; i++)); do
+podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET[$i]}
+done
+fi
+#get report(s)
+podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
+echo "---------------------------------------------wapiti scans; done."
 
 <<comment
 tee $RESULT_DIR/subfinder/Dockerfile<<EOF
