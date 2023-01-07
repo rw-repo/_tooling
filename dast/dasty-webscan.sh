@@ -65,6 +65,7 @@ podman exec owasp-zap mkdir -p /zap/results
 
 if [ "$SCAN_TYPE" = single ]; then
 podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/results/zap-report-${MODE}-${TARGET}-${DATE}.html
+
 elif [ "$SCAN_TYPE" = multiple ]; then
 for ((i=0; i<${#TARGETS[@]}; i++)); do
 podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGETS[$i]} -r /zap/results/zap-report-${MODE}-${APP_NAME[$i]}-${DATE}.html
@@ -93,10 +94,10 @@ EOF
 
 podman build -t arachni -f $RESULT_DIR/arachni/Dockerfile
 podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni
+podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
 echo "---------------------------------------------arachni build; done."
 
 if [ "$SCAN_TYPE" = single ]; then
-podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
 podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
 --report-save-path=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
 --output-only-positives ${MODE}://$TARGET
