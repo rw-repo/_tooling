@@ -17,6 +17,14 @@ alias podman-compose=docker-compose
 Builds Zap, Arachni, Nuclei, Wapiti containers, executes scan against 
 target(s) and outputs results in $RESULT_DIR
 
+Warning:  The intention is to automate the build of the containers,
+execute scan against target(s), offload scan results, and destroy
+containers.  If running any containers before this script, the
+"podman system reset -f" command will delete containers, images,
+networks, and volumes.  Advise using a fresh install of linux arch64.
+Currently use vagrant to build oracle linux 9 VM and inject script,
+then destroy VM once reports are offloaded.
+
 ------------------------------------------------------------------
 comment
 
