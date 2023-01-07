@@ -19,15 +19,9 @@ then delete the VM once reports are offloaded.
 ------------------------------------------------------------------
 comment
 
-#install podman and pre-req's for podman-compose like buildah, etc.
+#install podman
 dnf update -y \
 && dnf install podman podman-compose -y
-
-#install latest release of podman-compose (devel)
-curl -o /usr/local/bin/podman-compose \
-https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
-chmod +x /usr/local/bin/podman-compose
-alias podman-compose=/usr/local/bin/podman-compose
 
 #set env variables for scans
 DATE=$(date +"%Y%m%d")
