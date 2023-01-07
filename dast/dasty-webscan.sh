@@ -3,7 +3,7 @@
 <<comment
 ------------------------------------------------------------------
 
-Author: RW                         
+Author: Robert Weber                         
 
 If using debian/ubuntu;
 
