@@ -3,27 +3,18 @@
 <<comment
 ------------------------------------------------------------------
 
-Author: Robert Weber                         
-
-If using debian/ubuntu;
-
-alias dnf=apt-get
-
-If using docker;
-
-alias podman=docker
-alias podman-compose=docker-compose
+Author: Robert Weber
 
 Builds Zap, Arachni, Nuclei, Wapiti containers, executes scan against 
 target(s) and outputs results in $RESULT_DIR
 
-Warning:  The intention is to automate the build of the containers,
-execute scan against target(s), offload scan results, and destroy
-containers.  If running any containers before this script, the
+Warning:  The intent of this script is to automate the build of the 
+containers, execute scan against target(s), offload scan results, and 
+delete containers.  If running any containers before this script, the
 "podman system reset -f" command will delete containers, images,
 networks, and volumes.  Advise using a fresh install of linux arch64.
 Currently using vagrant to build oracle linux 9 VM and inject script,
-then destroy VM once reports are offloaded.
+then delete the VM once reports are offloaded.
 
 ------------------------------------------------------------------
 comment
