@@ -6,7 +6,6 @@
       shell: |
         groupadd -r nuclei
         useradd -r -g nuclei nuclei -m
-        chown -R /home/nuclei
     - name: create build directory
       file:
         path: /home/nuclei/build-container
