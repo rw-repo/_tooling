@@ -13,4 +13,3 @@
     podman cp nuclei:/results $RESULT_DIR/nuclei
   become: yes
   become_user: nuclei
-  become_method: "su"
