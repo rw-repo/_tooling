@@ -15,3 +15,5 @@
     podman exec owasp-zap mkdir -p /zap/results
     podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/results/zap-report-${MODE}-${TARGET}-${DATE}.html
     podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
+  become: yes
+  become_user: owasp-zap
