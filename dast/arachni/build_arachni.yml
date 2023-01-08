@@ -6,7 +6,6 @@
       shell: |
         groupadd -r arachni
         useradd -r -g arachni arachni -m
-        chown -R /home/arachni
     - name: create build directory
       file:
         path: /home/arachni/build-container
