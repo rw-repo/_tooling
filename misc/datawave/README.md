@@ -17,3 +17,6 @@ Documentation is located [here](https://code.nsa.gov/datawave/docs/)
 
 [li]: http://img.shields.io/badge/license-ASL-blue.svg
 [ll]: https://www.apache.org/licenses/LICENSE-2.0
+
+Datawave Overview
+[![Datawave](https://img.youtube.com/vi/WXA1yX8O3Lc/0.jpg)](https://www.youtube.com/watch?v=WXA1yX8O3Lc)
