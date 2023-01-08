@@ -1,0 +1,13 @@
+- name: "Nuclei Scans"
+  shell: |
+    DATE=$(date +"%Y%m%d")
+    MODE=http
+    TARGET=testhtml5.vulnweb.com
+    THREADS=35
+    RESULT_DIR=./
+    mkdir -p ${RESULT_DIR}/nuclei
+    podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name nuclei -d nuclei:v1.0
+    podman exec nuclei nuclei -ut
+    podman exec nuclei mkdir -p /results
+    podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
+    podman cp nuclei:/results $RESULT_DIR/nuclei
