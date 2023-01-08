@@ -6,7 +6,6 @@
       shell: |
         groupadd -r owasp-zap
         useradd -r -g owasp-zap owasp-zap -m
-        chown -R /home/owasp-zap
     - name: create build directory
       file:
         path: /home/owasp-zap/build-container
