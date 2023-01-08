@@ -9,8 +9,7 @@ anchore grype - vulnerabilities (csv)
 
 comment
 
-#expose podman socket for scanning local images
-systemctl start podman.socket
+#expose podman socket for user
 systemctl --user enable --now podman.socket
 
 #create report output directories
