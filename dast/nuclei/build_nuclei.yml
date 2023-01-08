@@ -2,10 +2,13 @@
 - hosts: ol9_dasty_box
   gather_facts: no
   tasks:
-    - name: create user account
+    - name: create user account & ssh keys
       shell: |
         groupadd -r nuclei
         useradd -r -g nuclei nuclei -m
+        mkdir -p /home/nuclei/.ssh
+        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f ~/.ssh/id_rsa_nuclei creates='~/.ssh/id_rsa_nuclei'
+        chown -R nuclei:nuclei ~/.ssh
     - name: create build directory
       file:
         path: /home/nuclei/build-container
