@@ -14,3 +14,6 @@
     /opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
     --report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}_${DATE}.html.zip
     podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
+  become: yes
+  become_user: arachni
+  become_method: "su"
