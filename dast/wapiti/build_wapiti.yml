@@ -1,7 +1,12 @@
 ---
-- hosts: build_host
+- hosts: ol9_dasty_box
   gather_facts: no
   tasks:
+    - name: create user account
+      shell: |
+        groupadd -r wapiti
+        useradd -r -g wapiti wapiti -m
+        chown -R /home/wapiti
     - name: create build directory
       file:
         path: /home/wapiti/build-container
