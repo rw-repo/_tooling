@@ -14,10 +14,14 @@ echo 'Installing Container Tools meta-package'
 
 dnf -y install container-tools
 
+echo 'Create dast account for script'
+
+groupadd -r dast && useradd -r -g dast dast -m
+
 echo 'Container Tools are ready to use'
 echo 'To get started, on your host, run:'
 echo '  vagrant ssh'
 echo
 echo 'Then, within the guest (for example):'
-echo '  rsync -av _tooling/dast/dasty-webscan.sh ipv4.address:/path/to/where/you/want/it'
+echo '  rsync -av ipv4.address.of.host:_tooling/dast/dasty-webscan.sh /home/dast'
 echo
