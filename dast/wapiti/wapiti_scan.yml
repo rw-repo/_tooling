@@ -9,3 +9,6 @@
     podman exec wapiti wapiti --update
     podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
     podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
+  become: yes
+  become_user: wapiti
+  become_method: "su"
