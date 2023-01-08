@@ -204,3 +204,5 @@ sudo rm -f /usr/local/bin/podman-compose
 To-do's:
 
 generate k8s services
+
+terraform/nomad with podman automation
