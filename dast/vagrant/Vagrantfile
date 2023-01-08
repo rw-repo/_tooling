@@ -30,7 +30,7 @@ BOX_URL = "https://oracle.github.io/vagrant-projects/boxes"
 BOX_NAME = "oraclelinux/9"
 
 # define hostname
-NAME = "ol9-vagrant"
+NAME = "ol9_dasty_box"
 
 # UI object for printing information
 ui = Vagrant::UI::Prefixed.new(Vagrant::UI::Colored.new, "vagrant")
