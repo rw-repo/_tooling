@@ -12,7 +12,7 @@
 echo 'INSTALLER: Started up'
 
 # get up to date
-dnf upgrade -y
+dnf upgrade -y && dnf autoremove -y
 
 echo 'INSTALLER: System updated'
 
