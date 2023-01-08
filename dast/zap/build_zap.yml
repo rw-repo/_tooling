@@ -1,7 +1,12 @@
 ---
-- hosts: build_host
+- hosts: ol9_dasty_box
   gather_facts: no
   tasks:
+    - name: create user account
+      shell: |
+        groupadd -r owasp-zap
+        useradd -r -g owasp-zap owasp-zap -m
+        chown -R /home/owasp-zap
     - name: create build directory
       file:
         path: /home/owasp-zap/build-container
