@@ -19,5 +19,5 @@ echo 'To get started, on your host, run:'
 echo '  vagrant ssh'
 echo
 echo 'Then, within the guest (for example):'
-echo '  podman run -it --rm oraclelinux:9-slim'
+echo '  rsync -av _tooling/dast/dasty-webscan.sh ipv4.address:/path/to/where/you/want/it'
 echo
