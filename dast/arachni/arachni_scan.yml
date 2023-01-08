@@ -3,8 +3,6 @@
     DATE=$(date +"%Y%m%d")
     MODE=http
     TARGET=testhtml5.vulnweb.com
-    THREADS=35
-    ZAP_API_ALLOW_IP=127.0.0.1
     RESULT_DIR=./
     mkdir -p ${RESULT_DIR}/arachni
     podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni:v1.0
