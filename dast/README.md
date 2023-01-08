@@ -203,6 +203,4 @@ sudo rm -f /usr/local/bin/podman-compose
 
 To-do's:
 
-generate ansible playbooks
-
 generate k8s services
