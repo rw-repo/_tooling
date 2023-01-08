@@ -12,7 +12,7 @@
 #
 echo 'Installing Container Tools meta-package'
 
-dnf -y install container-tools
+dnf -y install container-tools ansible
 
 echo 'Create dast account for script'
 
@@ -25,3 +25,5 @@ echo
 echo 'Then, within the guest (for example):'
 echo '  rsync -av ipv4.address.of.host:_tooling/dast/dasty-webscan.sh /home/dast'
 echo
+
+chown -R dast:dast /home/dast
