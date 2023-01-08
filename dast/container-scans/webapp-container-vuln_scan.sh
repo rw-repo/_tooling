@@ -4,13 +4,14 @@
 This shell script will scan declared container images with
 
 aquasec trivy - vulnerabilities (json,html)
-anchore syft - SBOM
+anchore syft - SBOM (json,csv)
 anchore grype - vulnerabilities (csv)
 
-if using docker;
-
-alias podman=docker
 comment
+
+#expose podman socket for scanning local images
+systemctl start podman.socket
+systemctl --user enable --now podman.socket
 
 #create report output directories
 mkdir -p ./scan_results/{trivy-cache,trivy-output,syft,grype}
@@ -19,13 +20,15 @@ mkdir -p ./scan_results/{trivy-cache,trivy-output,syft,grype}
 declare -a D_IMAGE=(
 #"my_repo/dev/my_webapp:v1"
 "docker.io/owasp/zap2docker-stable:latest"
-"localhost/arachni"
-"localhost/nuclei")
+"localhost/arachni:latest"
+"localhost/nuclei:latest"
+"localhost/wapiti:latest")
 declare -a R_NAME=(
 #"my_webapp"
 "owasp-zap"
 "arachni"
-"nuclei")
+"nuclei"
+"wapiti")
 
 for ((i=0; i<${#D_IMAGE[@]}; i++)); do
 # json output
