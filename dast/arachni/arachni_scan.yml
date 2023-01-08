@@ -16,4 +16,3 @@
     podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
   become: yes
   become_user: arachni
-  become_method: "su"
