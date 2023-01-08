@@ -44,10 +44,10 @@ declare -a APP_NAME=(
 "itsecgames")
 THREADS=35
 ZAP_API_ALLOW_IP="127.0.0.1"
-RESULT_DIR=$(pwd) #or state explicit directory to offload scan results to
+RESULT_DIR=./ #or state explicit directory to offload scan results to
 
 #make output directories
-mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,subfinder}
+mkdir -p ${RESULT_DIR}{owasp-zap,arachni,nuclei,wapiti}
 
 # ----------------------------------------------------------------------------------------------------- zed attack proxy;
 #podman build -t owasp-zap -f ./zap/Dockerfile
