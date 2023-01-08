@@ -6,7 +6,6 @@
       shell: |
         groupadd -r wapiti
         useradd -r -g wapiti wapiti -m
-        chown -R /home/wapiti
     - name: create build directory
       file:
         path: /home/wapiti/build-container
