@@ -31,8 +31,8 @@
 >   Links presented on this site have no affiliation to the site and are here only as samples.
 
 ```sh
-#install podman/podman-compose from package repo, get latest podman-compose
-sudo dnf install podman podman-compose -y
+#install podman/podman-compose from package repo, get latest podman-compose, compose not needed but for future use maybe?
+sudo dnf install container-tools podman-compose -y
 sudo curl -o /usr/local/bin/podman-compose \
 https://raw.githubusercontent.com/containers/podman-compose/devel/podman_compose.py
 sudo chmod +x /usr/local/bin/podman-compose
