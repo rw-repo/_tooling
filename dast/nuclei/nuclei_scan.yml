@@ -11,3 +11,6 @@
     podman exec nuclei mkdir -p /results
     podman exec nuclei nuclei -c $THREADS -ni -u ${MODE}://${TARGET} -o /results/nuclei-${MODE}-${TARGET}-${DATE}.log
     podman cp nuclei:/results $RESULT_DIR/nuclei
+  become: yes
+  become_user: nuclei
+  become_method: "su"
