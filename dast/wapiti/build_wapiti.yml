@@ -7,13 +7,16 @@
 - hosts: ol9_dasty_box
   gather_facts: no
   tasks:
-    - name: create user account
+    - name: create user account, ssh keys
       shell: |
         groupadd -r wapiti
         useradd -r -g wapiti wapiti -m
         mkdir -p /home/wapiti/.ssh
+        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/wapiti/.ssh/id_rsa_wapiti creates='/home/wapiti/.ssh/id_rsa_wapiti'
+        mv /home/wapiti/keygen/id_rsa_wapiti.pub /home/wapiti/.ssh/authorized_keys
+        chmod 0600 /home/wapiti/.ssh/authorized_keys
         chmod 0700 /home/wapiti/.ssh
-        chown -R wapiti:waiti /home/wapiti
+        chown -R wapiti:wapiti /home/wapiti
     - name: create build directory
       file:
         path: /home/wapiti/build-container
