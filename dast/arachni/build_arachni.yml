@@ -1,17 +1,17 @@
+#generate keypair for user arachni
+#ansible app -m shell -a "ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/arachni/.ssh/id_rsa_arachni creates='/home/arachni/.ssh/id_rsa_arachni'" -i ol9_dasty_box -b – become-user=arachni
+#ansible app -m shell -a "ls -lrt  /home/arachni/.ssh/id_rsa_arachni" -i ol9_dasty_box -b – become-user=arachni
+#ansible app -m fetch -a "src='/home/arachni/.ssh/id_rsa_arachni.pub' dest='buffer/{{inventory_hostname}}-id_rsa.pub' flat='yes'" -i ol9_dasty_box -b – become-user=arachni
 #ansible app -m authorized_key -a "user='arachni' state='p
 ---
 - hosts: ol9_dasty_box
   gather_facts: no
-  become: yes
-  become_user: arachni
   tasks:
-    - name: create user account & ssh keys
+    - name: create user account
       shell: |
         groupadd -r arachni
         useradd -r -g arachni arachni -m
         mkdir -p /home/arachni/.ssh
-        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/arachni/.ssh/id_rsa_arachni creates='/home/arachni/.ssh/id_rsa_arachni'
-        chown -R arachni:arachni /home/arachni
     - name: create build directory
       file:
         path: /home/arachni/build-container
