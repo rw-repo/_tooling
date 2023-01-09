@@ -13,7 +13,7 @@
         useradd -r -g nuclei nuclei -m
         mkdir -p /home/nuclei/.ssh
         ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/nuclei/.ssh/id_rsa_nuclei creates='/home/nuclei/.ssh/id_rsa_nuclei'
-        mv /home/nuclei/keygen/id_rsa_nuclei.pub /home/nuclei/.ssh/authorized_keys
+        mv /home/nuclei/id_rsa_nuclei.pub /home/nuclei/.ssh/authorized_keys
         chmod 0600 /home/nuclei/.ssh/authorized_keys
         chmod 0700 /home/nuclei/.ssh
         chown -R nuclei:nuclei /home/nuclei
