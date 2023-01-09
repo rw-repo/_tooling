@@ -10,8 +10,8 @@
         MODE=http
         TARGET=testhtml5.vulnweb.com
         ZAP_API_ALLOW_IP=127.0.0.1
-        RESULT_DIR=./
-        mkdir -p ${RESULT_DIR}/owasp-zap
+        RESULT_DIR=/home/owasp-zap
+        mkdir -p ${RESULT_DIR}/owasp-zap/scans
         genkey() {
         cat /dev/urandom | tr -cd 'A-Za-z0-9' | fold -w 24 | head -1
         }
@@ -20,4 +20,4 @@
         -config api.addrs.addr.regex=true -config api.key=$(genkey)
         podman exec owasp-zap mkdir -p /zap/results
         podman exec owasp-zap zap-full-scan.py -a -j -t ${MODE}://${TARGET} -r /zap/results/zap-report-${MODE}-${TARGET}-${DATE}.html
-        podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap
+        podman cp owasp-zap:/zap/results/ $RESULT_DIR/owasp-zap/scans
