@@ -7,11 +7,16 @@
 - hosts: ol9_dasty_box
   gather_facts: no
   tasks:
-    - name: create user account
+    - name: create user account, ssh keys
       shell: |
         groupadd -r owasp-zap
         useradd -r -g owasp-zap owasp-zap -m
         mkdir -p /home/owasp-zap/.ssh
+        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/owasp-zap/.ssh/id_rsa_owasp-zap creates='/home/owasp-zap/.ssh/id_rsa_owasp-zap'
+        mv /home/owasp-zap/id_rsa_wapiti.pub /home/owasp-zap/.ssh/authorized_keys
+        chmod 0600 /home/owasp-zap/.ssh/authorized_keys
+        chmod 0700 /home/owasp-zap/.ssh
+        chown -R owasp-zap:owasp-zap /home/owasp-zap
     - name: create build directory
       file:
         path: /home/owasp-zap/build-container
