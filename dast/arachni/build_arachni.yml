@@ -7,11 +7,14 @@
 - hosts: ol9_dasty_box
   gather_facts: no
   tasks:
-    - name: create user account
+    - name: create user account, ssh keys
       shell: |
         groupadd -r arachni
         useradd -r -g arachni arachni -m
         mkdir -p /home/arachni/.ssh
+        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/arachni/.ssh/id_rsa_arachni creates='/home/arachni/.ssh/id_rsa_arachni'
+        mv /home/arachni/keygen/id_rsa_arachni.pub /home/arachni/.ssh/authorized_keys
+        chmod 0600 /home/arachni/.ssh/authorized_keys
         chmod 0700 /home/arachni/.ssh
         chown -R arachni:arachni /home/arachni
     - name: create build directory
