@@ -14,10 +14,16 @@ echo 'Installing Container Tools meta-package'
 
 dnf -y install container-tools ansible
 
-echo 'Create dast account for script'
+echo 'Create dast account & keypair'
 
 groupadd -r dast && useradd -r -g dast dast -m
-
+mkdir -p /home/dast/.ssh
+ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/dast/.ssh/id_rsa_dast creates='/home/dast/.ssh/id_rsa_dast'
+mv /home/dast/id_rsa_dast.pub /home/dast/.ssh/authorized_keys
+chmod 0600 /home/dast/.ssh/authorized_keys
+chmod 0700 /home/dast/.ssh
+chown -R dast:dast /home/dast
+        
 echo 'Modifying ssh daemon config for rsa key auth'
 
 tee -a /etc/ssh/sshd_config<< EOF
@@ -36,5 +42,3 @@ echo
 echo 'Then, within the guest (for example):'
 echo '  rsync -av ipv4.address.of.host:_tooling/dast/dasty-webscan.sh /home/dast'
 echo
-
-chown -R dast:dast /home/dast
