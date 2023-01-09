@@ -1,14 +1,17 @@
+#generate keypair for user wapiti
+#ansible app -m shell -a "ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/wapiti/.ssh/id_rsa_wapiti creates='/home/wapiti/.ssh/id_rsa_wapiti'" -i ol9_dasty_box -b – become-user=wapiti
+#ansible app -m shell -a "ls -lrt  /home/wapiti/.ssh/id_rsa_wapiti" -i ol9_dasty_box -b – become-user=wapiti
+#ansible app -m fetch -a "src='/home/wapiti/.ssh/id_rsa_wapiti.pub' dest='buffer/{{inventory_hostname}}-id_rsa_wapiti.pub' flat='yes'" -i ol9_dasty_box -b – become-user=wapiti
+#ansible app -m authorized_key -a "user='wapiti' state='p
 ---
 - hosts: ol9_dasty_box
   gather_facts: no
   tasks:
-    - name: create user account & ssh keys
+    - name: create user account
       shell: |
         groupadd -r wapiti
         useradd -r -g wapiti wapiti -m
         mkdir -p /home/wapiti/.ssh
-        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/wapiti/.ssh/id_rsa_wapiti creates='/home/wapiti/.ssh/id_rsa_wapiti'
-        chown -R wapiti:wapiti /home/wapiti
     - name: create build directory
       file:
         path: /home/wapiti/build-container
