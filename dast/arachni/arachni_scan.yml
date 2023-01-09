@@ -9,8 +9,8 @@
         DATE=$(date +"%Y%m%d")
         MODE=http
         TARGET=testhtml5.vulnweb.com
-        RESULT_DIR=./
-        mkdir -p ${RESULT_DIR}/arachni
+        RESULT_DIR=/home/arachni
+        mkdir -p ${RESULT_DIR}/arachni/scans
         podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name arachni -d arachni:v1.0
         podman exec arachni mkdir -p /opt/arachni/results/arachni_${MODE}_scan_${DATE}/
         podman exec arachni /opt/arachni/bin/arachni --output-verbose --scope-include-subdomains \
@@ -19,5 +19,5 @@
         podman exec arachni /opt/arachni/bin/arachni_reporter \
         /opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}.afr \
         --report=html:outfile=/opt/arachni/results/arachni_${MODE}_scan_${DATE}/arachni_${MODE}_${TARGET}_${DATE}.html.zip
-        podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni
+        podman cp arachni:/opt/arachni/results/ $RESULT_DIR/arachni/scans
 
