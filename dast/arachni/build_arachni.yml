@@ -1,6 +1,9 @@
+#ansible app -m authorized_key -a "user='arachni' state='p
 ---
 - hosts: ol9_dasty_box
   gather_facts: no
+  become: yes
+  become_user: arachni
   tasks:
     - name: create user account & ssh keys
       shell: |
