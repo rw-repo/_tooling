@@ -7,8 +7,8 @@
         groupadd -r arachni
         useradd -r -g arachni arachni -m
         mkdir -p /home/arachni/.ssh
-        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f ~/.ssh/id_rsa_arachni creates='~/.ssh/id_rsa_arachni'
-        chown -R arachni:arachni ~/.ssh
+        ssh-keygen -q -b 2048 -t rsa -N '' -C 'creating SSH' -f /home/arachni/.ssh/id_rsa_arachni creates='/home/arachni/.ssh/id_rsa_arachni'
+        chown -R arachni:arachni /home/arachni
     - name: create build directory
       file:
         path: /home/arachni/build-container
