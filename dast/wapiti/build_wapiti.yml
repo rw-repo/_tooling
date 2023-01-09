@@ -12,6 +12,8 @@
         groupadd -r wapiti
         useradd -r -g wapiti wapiti -m
         mkdir -p /home/wapiti/.ssh
+        chmod 0700 /home/wapiti/.ssh
+        chown -R wapiti:waiti /home/wapiti
     - name: create build directory
       file:
         path: /home/wapiti/build-container
