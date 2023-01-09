@@ -18,6 +18,17 @@ echo 'Create dast account for script'
 
 groupadd -r dast && useradd -r -g dast dast -m
 
+echo 'Modifying ssh daemon config for rsa key auth'
+
+tee -a /etc/ssh/sshd_config<< EOF
+#***********************************************************
+# Enable RSA Key Authentication:
+# generated for ansible
+#***********************************************************
+PubkeyAuthentication yes
+RSAAuthentication yes
+EOF
+
 echo 'Container Tools are ready to use'
 echo 'To get started, on your host, run:'
 echo '  vagrant ssh'
