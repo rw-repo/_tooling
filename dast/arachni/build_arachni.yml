@@ -12,6 +12,8 @@
         groupadd -r arachni
         useradd -r -g arachni arachni -m
         mkdir -p /home/arachni/.ssh
+        chmod 0700 /home/arachni/.ssh
+        chown -R arachni:arachni /home/arachni
     - name: create build directory
       file:
         path: /home/arachni/build-container
