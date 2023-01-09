@@ -9,9 +9,9 @@
         DATE=$(date +"%Y%m%d")
         MODE=http
         TARGET=testhtml5.vulnweb.com
-        RESULT_DIR=./
-        mkdir -p ${RESULT_DIR}/wapiti
+        RESULT_DIR=/home/wapiti
+        mkdir -p ${RESULT_DIR}/wapiti/scans
         podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name wapiti -d wapiti:v1.0
         podman exec wapiti wapiti --update
         podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
-        podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
+        podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti/scans
