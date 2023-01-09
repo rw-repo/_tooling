@@ -1,13 +1,17 @@
-- name: "Wapiti Scans"
-  shell: |
-    DATE=$(date +"%Y%m%d")
-    MODE=http
-    TARGET=testhtml5.vulnweb.com
-    RESULT_DIR=./
-    mkdir -p ${RESULT_DIR}/wapiti
-    podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name wapiti -d wapiti:v1.0
-    podman exec wapiti wapiti --update
-    podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
-    podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
+---
+- hosts: ol9_dasty_box
+  gather_facts: no
   become: yes
   become_user: wapiti
+  tasks:
+    - name: "Wapiti Scans"
+      shell: |
+        DATE=$(date +"%Y%m%d")
+        MODE=http
+        TARGET=testhtml5.vulnweb.com
+        RESULT_DIR=./
+        mkdir -p ${RESULT_DIR}/wapiti
+        podman run --rm -v /etc/localtime:/etc/localtime:ro -it --name wapiti -d wapiti:v1.0
+        podman exec wapiti wapiti --update
+        podman exec wapiti wapiti -v2 -u ${MODE}://${TARGET}
+        podman cp wapiti:/root/.wapiti/generated_report $RESULT_DIR/wapiti
