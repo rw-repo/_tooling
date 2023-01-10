@@ -31,3 +31,5 @@ user and group IDs. Otherwise, they have no root privileges to the operating sys
 
 A container running as root in a rootless account can turn on privileged features within its own namespace. 
 But that doesn't provide any special privileges to access protected features on the host (beyond having extra UIDs and GIDs).
+
+[![Rootless](https://img.youtube.com/vi/N4ki5Sffy-E)/0.jpg)](https://www.youtube.com/watch?v=N4ki5Sffy-E)
