@@ -1,6 +1,6 @@
 ## Laying the groundwork for nomad and podman
 
-# nomad arch
+nomad arch
 
 <p align="center">
   <img src="https://content.hashicorp.com/api/assets?product=tutorials&version=main&asset=public%2Fimg%2Fnomad%2Fproduction%2Fnomad_reference_diagram.png?raw=true" alt="Nomad Architecture"/>
