@@ -3,7 +3,7 @@
 
 > **Note**
 >
-> Using podman-compose. (1.0.4 and podman 4.1.1)
+> Using podman-compose. (1.0.4 and podman 4.2.0)
 >
 > sudo curl -o /usr/local/bin/podman-compose \
 >
