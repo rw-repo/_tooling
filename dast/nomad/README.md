@@ -11,7 +11,7 @@ sudo passwd nomad_svc
 
 # create sysd service for podman api
 
-sudo bash -c ' cat << EOF > /etc/systemd/system/podman.service
+sudo tee /etc/systemd/system/podman.service<<EOF
 [Unit]
 Description=Podman API service
 [Service]
@@ -21,7 +21,7 @@ ExecStart=podman system service --timeout 0 unix:///run/user/1007/podman/podman.
 Restart=no
 [Install]
 WantedBy=multi-user.target
-EOF'
+EOF
 
 sudo systemctl daemon-reload
 sudo service podman restart
