@@ -2,15 +2,17 @@
 
 > **Note**
 >
->[What is Nomad?>](https://www.nomadproject.io)
+> [What is Nomad?>](https://www.nomadproject.io)
 >
-> Consul is the service mesh, podman over docker
+> [What is Consul?>](https://www.consul.io)
 >
->[What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
+> Consul is the service mesh, vault keeps secrets, and podman over docker
 >
->[Installing Podman>](https://podman.io/getting-started/installation)
+> [What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
 >
-> Sorry k8s fanboy's, nomad/podman is a more secure alternative
+> [Installing Podman>](https://podman.io/getting-started/installation)
+>
+> Sorry k8s fanboy's, nomad/podman is a more secure alternative - imho :-)
 
 
 to-do's
