@@ -18,7 +18,7 @@ sudo dnf install nomad -y
 
 sudo touch /etc/systemd/system/nomad.service
 
-sudo tee /etc/systemd/system/nomad.service<<EOF
+sudo tee -a /etc/systemd/system/nomad.service<<EOF
 [Unit]
 Description=Nomad
 Documentation=https://www.nomadproject.io/docs/
@@ -73,6 +73,7 @@ EOF
 
 sudo mkdir --parents /etc/nomad.d
 sudo chmod 700 /etc/nomad.d
+
 sudo touch /etc/nomad.d/nomad.hcl
 
 sudo tee -a /etc/nomad.d/nomad.hcl<<EOF
@@ -81,6 +82,7 @@ data_dir = "/opt/nomad"
 EOF
 
 sudo touch /etc/nomad.d/server.hcl
+
 sudo tee -a /etc/nomad.d/server.hcl<<EOF
 server {
   enabled = true
@@ -89,6 +91,7 @@ server {
 EOF
 
 sudo touch /etc/nomad.d/client.hcl
+
 sudo tee -a /etc/nomad.d/client.hcl<<EOF
 client {
   enabled = true
