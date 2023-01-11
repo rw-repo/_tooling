@@ -1,4 +1,4 @@
-## Laying the groundwork for nomand and podman
+## Laying the groundwork for nomad and podman
 
 ```sh
 
