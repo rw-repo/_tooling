@@ -4,6 +4,8 @@
 >
 >[What is Nomad?>](https://www.nomadproject.io)
 >
+> Consul is the service mesh, podman over docker
+>
 >[What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
 >
 >[Installing Podman>](https://podman.io/getting-started/installation)
