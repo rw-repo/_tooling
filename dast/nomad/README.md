@@ -18,6 +18,8 @@
 
 to-do's
 
+generate tls certs for nomad, store in vault
+
 enable tls for nomad servers/clients
 
 generate nomad/podman task/job's for dast scans
