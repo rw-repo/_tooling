@@ -80,6 +80,25 @@ datacenter = "dc1"
 data_dir = "/opt/nomad"
 EOF
 
+sudo touch /etc/nomad.d/server.hcl
+sudo tee -a /etc/nomad.d/server.hcl<<EOF
+server {
+  enabled = true
+  bootstrap_expect = 3
+}
+EOF
+
+sudo touch /etc/nomad.d/client.hcl
+sudo tee -a /etc/nomad.d/client.hcl<<EOF
+client {
+  enabled = true
+}
+EOF
+
+sudo systemctl enable nomad
+sudo systemctl start nomad
+sudo systemctl status nomad
+
 # create podman api svc account
 
 sudo useradd -m podman_api
