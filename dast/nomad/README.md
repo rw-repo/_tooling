@@ -80,12 +80,12 @@ datacenter = "dc1"
 data_dir = "/opt/nomad"
 EOF
 
-# create nomad svc account
+# create podman api svc account
 
-sudo useradd -m nomad_svc
-sudo usermod -aG wheel nomad_svc
-sudo usermod -u 1007 nomad_svc
-sudo passwd nomad_svc
+sudo useradd -m podman_api
+sudo usermod -aG wheel podman_api
+sudo usermod -u 1007 podman_api
+sudo passwd podman_api
 
 # create sysd service for podman api
 
@@ -93,7 +93,7 @@ sudo tee /etc/systemd/system/podman.service<<EOF
 [Unit]
 Description=Podman API service
 [Service]
-User=nomad_svc
+User=podman_api
 WorkingDirectory=/run/user/1007/podman/
 ExecStart=podman system service --timeout 0 unix:///run/user/1007/podman/podman.sock
 Restart=no
