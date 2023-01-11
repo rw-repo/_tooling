@@ -6,7 +6,7 @@
 >
 > [What is Consul?>](https://www.consul.io)
 >
-> Consul is the service mesh, vault keeps secrets, and podman over docker
+> Consul is the service mesh, Nomad is the orchestrator, Vault keeps secrets, and podman (daemonless)
 >
 > [What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
 >
