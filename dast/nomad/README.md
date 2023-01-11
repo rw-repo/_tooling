@@ -28,8 +28,8 @@ After=network-online.target
 # When using Nomad with Consul it is not necessary to start Consul first. These
 # lines start Consul before Nomad as an optimization to avoid Nomad logging
 # that Consul is unavailable at startup.
-#Wants=consul.service
-#After=consul.service
+Wants=consul.service
+After=consul.service
 
 [Service]
 
@@ -54,10 +54,10 @@ RestartSec=2
 ## to configure how many starts per interval are allowed. The values in the
 ## commented lines are defaults.
 
-# StartLimitBurst = 5
+StartLimitBurst = 5
 
 ## StartLimitIntervalSec is used for systemd versions >= 230
-# StartLimitIntervalSec = 10s
+StartLimitIntervalSec = 10s
 
 ## StartLimitInterval is used for systemd versions < 230
 # StartLimitInterval = 10s
