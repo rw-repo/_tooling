@@ -21,6 +21,12 @@ sudo dnf install yum-utils -y
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 sudo dnf install nomad -y
 
+# create nomad user
+
+sudo groupadd -r nomad
+sudo useradd -r -g nomad nomad -m
+sudo passwd nomad
+
 # create nomad sysd service
 
 sudo touch /etc/systemd/system/nomad.service
