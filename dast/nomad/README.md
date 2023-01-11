@@ -1,5 +1,13 @@
 ## Laying the groundwork for nomad and podman
 
+> **Note**
+>[What is Nomad?>](https://www.nomadproject.io)
+>
+>[What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
+>
+>[Installing Podman>](https://podman.io/getting-started/installation)
+>
+
 to-do's
 
 enable tls for nomad servers/clients
