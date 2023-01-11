@@ -11,8 +11,6 @@
 > [What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
 >
 > [Installing Podman>](https://podman.io/getting-started/installation)
->
-> Sorry k8s fanboy's, nomad/podman is a more secure alternative - imho :-)
 
 
 to-do's
