@@ -1,5 +1,11 @@
 ## Laying the groundwork for nomad and podman
 
+to-do's
+
+enable tls for nomad servers/clients
+
+generate nomad/podman task/job's for dast scans
+
 nomad arch
 
 <p align="center">
