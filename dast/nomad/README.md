@@ -1,6 +1,84 @@
 ## Laying the groundwork for nomad and podman
 
+# nomad arch
+
+<p align="center">
+  <img src="https://content.hashicorp.com/api/assets?product=tutorials&version=main&asset=public%2Fimg%2Fnomad%2Fproduction%2Fnomad_reference_diagram.png?raw=true" alt="Nomad Architecture"/>
+</p>
+
+
 ```sh
+# install nomad
+
+sudo dnf install yum-utils -y
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+sudo dnf install nomad -y
+
+# create nomad sysd service
+
+sudo touch /etc/systemd/system/nomad.service
+
+sudo tee /etc/systemd/system/nomad.service<<EOF
+[Unit]
+Description=Nomad
+Documentation=https://www.nomadproject.io/docs/
+Wants=network-online.target
+After=network-online.target
+
+# When using Nomad with Consul it is not necessary to start Consul first. These
+# lines start Consul before Nomad as an optimization to avoid Nomad logging
+# that Consul is unavailable at startup.
+#Wants=consul.service
+#After=consul.service
+
+[Service]
+
+# Nomad server should be run as the nomad user. Nomad clients
+# should be run as root
+User=nomad
+Group=nomad
+
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/nomad agent -config /etc/nomad.d
+KillMode=process
+KillSignal=SIGINT
+LimitNOFILE=65536
+LimitNPROC=infinity
+Restart=on-failure
+RestartSec=2
+
+## Configure unit start rate limiting. Units which are started more than
+## *burst* times within an *interval* time span are not permitted to start any
+## more. Use `StartLimitIntervalSec` or `StartLimitInterval` (depending on
+## systemd version) to configure the checking interval and `StartLimitBurst`
+## to configure how many starts per interval are allowed. The values in the
+## commented lines are defaults.
+
+# StartLimitBurst = 5
+
+## StartLimitIntervalSec is used for systemd versions >= 230
+# StartLimitIntervalSec = 10s
+
+## StartLimitInterval is used for systemd versions < 230
+# StartLimitInterval = 10s
+
+TasksMax=infinity
+OOMScoreAdjust=-1000
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# common config
+
+sudo mkdir --parents /etc/nomad.d
+sudo chmod 700 /etc/nomad.d
+sudo touch /etc/nomad.d/nomad.hcl
+
+sudo tee -a /etc/nomad.d/nomad.hcl<<EOF
+datacenter = "dc1"
+data_dir = "/opt/nomad"
+EOF
 
 # create nomad svc account
 
