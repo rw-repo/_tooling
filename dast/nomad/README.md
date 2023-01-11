@@ -121,6 +121,7 @@ sudo useradd -m podman_api
 sudo usermod -aG wheel podman_api
 sudo usermod -u 1007 podman_api
 sudo passwd podman_api
+sudo runuser -l podman_api -c 'systemctl --user enable --now podman.socket'
 
 # create sysd service for podman api
 
