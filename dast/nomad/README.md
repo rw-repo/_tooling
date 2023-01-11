@@ -1,6 +1,7 @@
 ## Laying the groundwork for nomad and podman
 
 > **Note**
+>
 >[What is Nomad?>](https://www.nomadproject.io)
 >
 >[What is Podman?>](https://www.redhat.com/en/topics/containers/what-is-podman)
