@@ -143,7 +143,7 @@ sudo service podman restart
 
 wget https://github.com/hashicorp/nomad-driver-podman/archive/refs/heads/main.zip
 unzip main.zip && mv nomad-driver-podman-main ./nomad-driver-podman
-mv nomad-driver-podman /var/nomad/plugins/
+mv nomad-driver-podman /usr/lib/nomad/plugins/
 
 # modify client node config file
 
