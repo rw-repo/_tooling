@@ -1,6 +1,9 @@
 ## 
 
 ```sh
+
+# https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+
 sudo dnf install slirp4netns -y
 sudo echo "user.max_user_namespaces=<   >" > /etc/sysctl.d/userns.conf 	 
 sudo sysctl -p /etc/sysctl.d/userns.conf
