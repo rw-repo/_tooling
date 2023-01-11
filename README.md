@@ -1,6 +1,8 @@
 # Tooling Repository
 
-Open source tools, on-going projects
+Open source tools and on-going projects for familiarization.  
+
+Disclaimer: Not intended for production use.  
 
 Random projects of open source software for knowledge sharing.
 
