@@ -31,3 +31,11 @@ openscap - https://www.open-scap.org/
 trivy - https://www.aquasec.com/products/trivy/
 
 syft & grype - https://anchore.com/opensource/
+
+if using rhel; now insights offers free malware scanning:
+```sh
+dnf install yara -y
+insights-client --register
+insights-client --collector malware-detection
+```
+to view detection results:   https://console.redhat.com/insights/malware/systems
