@@ -33,17 +33,17 @@
 ```sh
 <<comment
 packages installed:
- buildah		    x86_64		1:1.27.2-2.el9_1
- cockpit-podman		noarch		53-1.el9
- podman-docker		noarch		2:4.2.0-7.el9_1
- podman-remote		x86_64		2:4.2.0-7.el9_1
- python3-podman		noarch		3:4.2.1-1.el9_1
- python3-pyxdg		noarch		0.27-3.el9
- python3-toml		noarch		0.10.2-6.el9
- runc			    x86_64		4:1.1.4-1.el9_1
- skopeo			    x86_64		2:1.9.4-0.1.el9_1
- toolbox		    x86_64		0.0.99.3-5.el9
- udica			    noarch		0.2.6-4.el9
+ buildah	1:1.27.2-2.el9_1
+ cockpit-podman	53-1.el9
+ podman-docker	2:4.2.0-7.el9_1
+ podman-remote	2:4.2.0-7.el9_1
+ python3-podman	3:4.2.1-1.el9_1
+ python3-pyxdg	0.27-3.el9
+ python3-toml	0.10.2-6.el9
+ runc	4:1.1.4-1.el9_1
+ skopeo	2:1.9.4-0.1.el9_1
+ toolbox	0.0.99.3-5.el9
+ udica	0.2.6-4.el9
  
 comment
 
