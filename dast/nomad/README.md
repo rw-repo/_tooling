@@ -8,6 +8,8 @@
 >
 >[Installing Podman>](https://podman.io/getting-started/installation)
 >
+> Sorry k8s fanboy's, nomad/podman is a secure alternative
+
 
 to-do's
 
