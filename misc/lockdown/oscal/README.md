@@ -1,4 +1,4 @@
-## Fedramp System Security Plan document maker
+## FedRAMP System Security Plan template
 
 ```sh
 podman build -t oscal .
