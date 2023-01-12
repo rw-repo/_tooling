@@ -1,5 +1,9 @@
 ## FedRAMP System Security Plan template
 
+This will fill some of the data as a launching point for the SSP draft.
+
+Still need to access controls.
+
 ```sh
 podman build -t oscal .
 podman run --rm -it --name oscal -d oscal
