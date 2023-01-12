@@ -2,7 +2,9 @@
 
 This will fill some of the data as a launching point for the SSP draft.
 
-Still need to access controls.
+XML's located here:  https://github.com/ComplianceAsCode/oscal/tree/master/xml
+
+Modify XML with control response and load in container to generate the document in docx format.
 
 ```sh
 podman build -t oscal .
