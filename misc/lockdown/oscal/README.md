@@ -7,7 +7,9 @@ podman cp oscal:FedRAMP-High-rhel8.docx ./
 ```
 
 ```console
-Replace Dockerfile with SSP to be generated
+Replace Dockerfile with any of the following:
+
+OSCAL formatted SSPs (System Security Plans)
 
 ansible-tower-fedramp-High.xml
 ansible-tower-fedramp-Low.xml
