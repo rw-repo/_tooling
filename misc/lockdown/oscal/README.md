@@ -1,6 +1,7 @@
 ## Fedramp System Security Plan document maker
 
 ```sh
+podman build -t oscal .
 podman run --rm -it --name oscal -d oscal
 podman cp oscal:FedRAMP-High-rhel8.docx ./
 ```
